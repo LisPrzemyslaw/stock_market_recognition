@@ -1,9 +1,16 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 from stock_market_recognition.wallet.demo_wallet import DemoWallet
+
+if TYPE_CHECKING:
+    from stock_market_recognition.wallet.wallet_interface import WalletInterface
 
 
 class WalletFactory:
     DEMO_WALLET = "DEMO_WALLET"
     _ALL_WALLETS = {DEMO_WALLET: DemoWallet}
 
-    def create_wallet(self, wallet_name: str, amount: int):
-        return self._ALL_WALLETS[wallet_name](amount)
+    @staticmethod
+    def create_wallet(wallet_name: str, amount: float) -> WalletInterface:
+        return WalletFactory._ALL_WALLETS[wallet_name](amount)

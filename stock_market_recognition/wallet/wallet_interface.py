@@ -4,10 +4,9 @@ from abc import ABC, abstractmethod
 
 
 class WalletInterface(ABC):
-    def __init__(self, amount: int = 0):
+    def __init__(self, amount: float = 0):
         self.currency = "USD"
         self.amount = amount
-        self.stocks: dict[str: float] = {}  # In database with sqlalchemy. If exist then increade, decrease
 
     @abstractmethod
     def buy_stock(self, stock_name: str, amount: float):
@@ -28,3 +27,7 @@ class WalletInterface(ABC):
         :return:
         """
         pass
+
+    # @
+    # def all_stocks(self):
+    #     return
