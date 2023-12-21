@@ -4,7 +4,8 @@ from abc import ABC, abstractmethod
 
 
 class WalletInterface(ABC):
-    def __init__(self, amount: float = 0):
+    def __init__(self, user_id: str, amount: float = 0):
+        self.user_id = user_id
         self.currency = "USD"
         self.amount = amount
 

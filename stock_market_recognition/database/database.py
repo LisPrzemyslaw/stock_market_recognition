@@ -1,3 +1,4 @@
+import configparser
 import os.path
 import hashlib
 
@@ -5,19 +6,6 @@ from sqlalchemy import create_engine, ForeignKey, Column, Integer, String, Float
 from sqlalchemy.orm import sessionmaker, declarative_base
 
 _Base = declarative_base()
-
-
-# class Wallet(_Base):
-#     __tablename__ = 'wallet'
-#
-#     user_id = Column("user_id", String, primary_key=True)
-#     stock_id = Column("stock_id", ForeignKey("stock.wallet_id"))
-#
-#     def __init__(self, user_id: str):
-#         self.user_id = user_id
-#
-#     def __repr__(self):
-#         return f"<Wallet {self.user_id}> ({self.stock_id})"
 
 
 class Stock(_Base):
@@ -77,8 +65,21 @@ class User(_Base):
         return f"<User {self.user_id}> {self.balance} USD"
 
 
-_db_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "stock.db")
-_engine = create_engine(f"sqlite:///{_db_path}", echo=False)  # TODO Debug purposes
+def _choose_database() -> str:
+    """
+    This function will return proper db due to config
+
+    :return: database path
+    """
+    _config = configparser.ConfigParser()
+    _config.read(os.path.join(os.getcwd(), "configuration", 'equipment.ini'))
+    db_type = _config.get("database", "type")
+    if db_type == "local":
+        return os.path.join(os.path.dirname(os.path.realpath(__file__)), "stock.db")
+    raise NotImplementedError
+
+
+_engine = create_engine(f"sqlite:///{_choose_database()}", echo=False)  # TODO Debug purposes
 _Base.metadata.create_all(bind=_engine)
 _Session = sessionmaker(bind=_engine)
 

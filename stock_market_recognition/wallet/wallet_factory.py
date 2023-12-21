@@ -12,5 +12,5 @@ class WalletFactory:
     _ALL_WALLETS = {DEMO_WALLET: DemoWallet}
 
     @staticmethod
-    def create_wallet(wallet_name: str, amount: float) -> WalletInterface:
-        return WalletFactory._ALL_WALLETS[wallet_name](amount)
+    def create_wallet(wallet_name: str, user_id: str, amount: float) -> WalletInterface:
+        return WalletFactory._ALL_WALLETS[wallet_name](user_id, amount)

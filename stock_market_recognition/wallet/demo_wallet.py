@@ -2,8 +2,8 @@ from stock_market_recognition.wallet.wallet_interface import WalletInterface
 
 
 class DemoWallet(WalletInterface):
-    def __init__(self, amount: float = 0):
-        super().__init__(amount)
+    def __init__(self, user_id: str, amount: float = 0):
+        super().__init__(user_id, amount)
 
     def buy_stock(self, stock_name: str, amount: float):
         """
