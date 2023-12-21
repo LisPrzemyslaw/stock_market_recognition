@@ -17,7 +17,8 @@ pandas = "*"
 numpy = "*"
 yfinance = "*"
 python-dotenv = "*"
-sqlalchemy = "*"
+SQLAlchemy = "*"
+flask = "*"
 
 [tool.poetry.group.dev.dependencies]
 poetry = "^1.7.0"

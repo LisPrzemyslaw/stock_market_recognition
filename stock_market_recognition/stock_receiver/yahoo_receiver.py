@@ -1,4 +1,4 @@
-from stock_market_recognition.stock_reciever.stock_receiver_interface import StockReceiverInterface
+from stock_market_recognition.stock_receiver.stock_receiver_interface import StockReceiverInterface
 
 import yfinance as yf
 
