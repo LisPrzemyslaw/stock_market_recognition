@@ -24,7 +24,7 @@ def main():
     if not db_user.verify_password(os.getenv('DB_PASSWORD')):
         raise ValueError('Incorrect password')
 
-    wallet = WalletFactory.create_wallet(_config.get("wallet", "type"), db_user.balance)
+    wallet = WalletFactory.create_wallet(_config.get("wallet", "type"), db_user.user_id, db_user.balance)
 
     wallet.buy_stock("google", 2.1)
     wallet.sell_stock("google", 2.1)
