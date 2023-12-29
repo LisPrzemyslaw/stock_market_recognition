@@ -79,7 +79,7 @@ def _choose_database() -> str:
     raise NotImplementedError
 
 
-_engine = create_engine(f"sqlite:///{_choose_database()}", echo=False)  # TODO Debug purposes
+_engine = create_engine(f"sqlite:///{_choose_database()}", echo=True)  # TODO Debug purposes
 _Base.metadata.create_all(bind=_engine)
 _Session = sessionmaker(bind=_engine)
 

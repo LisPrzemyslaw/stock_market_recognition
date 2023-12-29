@@ -1,9 +1,16 @@
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from stock_market_recognition.wallet.wallet_interface import WalletInterface
+
+if TYPE_CHECKING:
+    from stock_market_recognition.database.database import User
 
 
 class DemoWallet(WalletInterface):
-    def __init__(self, user_id: str, amount: float = 0):
-        super().__init__(user_id, amount)
+    def __init__(self, db_user: User):
+        super().__init__(db_user)
 
     def buy_stock(self, stock_name: str, amount: float):
         """
@@ -22,4 +29,3 @@ class DemoWallet(WalletInterface):
         :return:
         """
         print(f"stock: {stock_name}, sold: {amount} amount")
-
