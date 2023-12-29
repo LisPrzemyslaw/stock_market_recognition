@@ -12,20 +12,28 @@ class DemoWallet(WalletInterface):
     def __init__(self, db_user: User):
         super().__init__(db_user)
 
-    def buy_stock(self, stock_name: str, amount: float):
+    def buy_stock(self, stock_name: str, amount: float) -> None:
         """
-        TODO
-        :param stock_name:
-        :param amount:
-        :return:
+        This method is used to buy a stock
+
+        :param stock_name: name of the stock
+        :param amount: amount to buy
         """
         print(f"stock: {stock_name}, bought: {amount} amount")
 
-    def sell_stock(self, stock_name: str, amount: float):
+    def sell_stock(self, stock_name: str, amount: float) -> None:
         """
-        TODO
-        :param stock_name:
-        :param amount:
-        :return:
+        This method is used to sell a stock
+
+        :param stock_name: name of the stock
+        :param amount: amount to sell
         """
         print(f"stock: {stock_name}, sold: {amount} amount")
+
+    def get_all_stocks(self) -> dict[str, float]:
+        """
+        This function will return all stocks assigned to this user.
+
+        :return: dict of all stocks assigned to this wallet
+        """
+        return {}  # TODO

@@ -21,25 +21,30 @@ class WalletInterface(ABC):
         raise NotImplementedError("Not implemented")
 
     @abstractmethod
-    def buy_stock(self, stock_name: str, amount: float):
+    def buy_stock(self, stock_name: str, amount: float) -> None:
         """
-        TODO
-        :param stock_name:
-        :param amount:
-        :return:
+        This method is used to buy a stock
+
+        :param stock_name: name of the stock
+        :param amount: amount to buy
         """
         pass
 
     @abstractmethod
-    def sell_stock(self, stock_name: str, amount: float):
+    def sell_stock(self, stock_name: str, amount: float) -> None:
         """
-        TODO
-        :param stock_name:
-        :param amount:
-        :return:
+        This method is used to sell a stock
+
+        :param stock_name: name of the stock
+        :param amount: amount to sell
         """
         pass
 
-    # @
-    # def all_stocks(self):
-    #     return
+    @abstractmethod
+    def get_all_stocks(self) -> dict[str, float]:
+        """
+        This function will return all stocks assigned to this user.
+
+        :return: dict of all stocks assigned to this wallet
+        """
+        pass
