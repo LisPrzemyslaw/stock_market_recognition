@@ -1,15 +1,15 @@
-import configparser
-import os.path
+import os
 import hashlib
+import configparser
 
-from sqlalchemy import create_engine, ForeignKey, Column, Integer, String, Float
 from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import Float, Column, String, ForeignKey, create_engine
 
 _Base = declarative_base()
 
 
 class Stock(_Base):
-    __tablename__ = 'stock'
+    __tablename__ = "stock"
 
     user_id = Column("user_id", ForeignKey("user.user_id"), primary_key=True)
     stock_name = Column("stock_name", String)
@@ -25,7 +25,7 @@ class Stock(_Base):
 
 
 class User(_Base):
-    __tablename__ = 'user'
+    __tablename__ = "user"
 
     user_id = Column("user_id", String, primary_key=True)
     password = Column("password", String)
@@ -45,7 +45,7 @@ class User(_Base):
 
         :return: hashed password
         """
-        password_bytes = password.encode('utf-8')
+        password_bytes = password.encode("utf-8")
         hasher = hashlib.sha256()
         hasher.update(password_bytes)
         hashed_password = hasher.hexdigest()
@@ -72,7 +72,7 @@ def _choose_database() -> str:
     :return: database path
     """
     _config = configparser.ConfigParser()
-    _config.read(os.path.join(os.getcwd(), "configuration", 'equipment.ini'))
+    _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))
     db_type = _config.get("database", "type")
     if db_type == "local":
         return os.path.join(os.path.dirname(os.path.realpath(__file__)), "stock.db")

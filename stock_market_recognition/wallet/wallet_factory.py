@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING
 from stock_market_recognition.wallet.demo_wallet import DemoWallet
 
 if TYPE_CHECKING:
-    from stock_market_recognition.wallet.wallet_interface import WalletInterface
     from stock_market_recognition.database.database import User
+    from stock_market_recognition.wallet.wallet_interface import WalletInterface
 
 
 class WalletFactory:

@@ -1,6 +1,6 @@
-from stock_market_recognition.stock_receiver.stock_receiver_interface import StockReceiverInterface
-
 import yfinance as yf
+
+from stock_market_recognition.stock_receiver.stock_receiver_interface import StockReceiverInterface
 
 
 class YahooReceiver(StockReceiverInterface):
