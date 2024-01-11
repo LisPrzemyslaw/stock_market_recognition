@@ -7,8 +7,11 @@ from stock_market_recognition.stock_receiver.stock_receiver_interface import Sto
 class YahooReceiver(StockReceiverInterface):
     # to use = [Close, Volume, Dividends, Stock Splits,  .info.get("country", None)]
 
+    DEFAULT_PARAMETERS = {}
+
     def __init__(self):
         super().__init__()
+        self.parameters = self.DEFAULT_PARAMETERS
 
     def receive_data(self, stock_ticker: str) -> pd.DataFrame:
         """

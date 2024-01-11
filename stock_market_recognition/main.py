@@ -17,15 +17,15 @@ _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))
 def __check_if_api_works():
     dotenv.load_dotenv(os.path.join(os.getcwd(), "configuration", ".env"))
     # Test API
-    if db_session.query(User).filter(User.user_id == os.environ.get("DB_USERNAME")).count() == 0:
+    if not db_session.query(User).filter(User.user_id == os.environ.get("DB_USERNAME")).first():
         db_session.add(User(os.environ.get("DB_USERNAME"), os.environ.get("DB_PASSWORD"), float(_config.get("wallet", "balance"))))
         db_session.commit()
 
-    db_user: User = db_session.query(User).filter(User.user_id == os.environ.get("DB_USERNAME"))[0]
+    db_user: User = db_session.query(User).filter(User.user_id == os.environ.get("DB_USERNAME")).first()
     if not db_user.verify_password(os.getenv("DB_PASSWORD")):
         raise ValueError("Incorrect password")
 
-    wallet = WalletFactory.create_wallet(_config.get("wallet", "type"), db_user.user_id, db_user.balance)
+    wallet = WalletFactory.create_wallet(_config.get("wallet", "type"), db_user)
 
     wallet.buy_stock("google", 2.1)
     wallet.sell_stock("google", 2.1)
@@ -40,10 +40,10 @@ def index():
         if request.form.get("Login") == "Login":
             username = request.form.get("username")
             password = request.form.get("password")
-            if db_session.query(User).filter(User.user_id == username).count() == 0:
+            if not db_session.query(User).filter(User.user_id == username).first():
                 print(f"There is no user with username: {username}")
                 return render_template("index.html")
-            db_user: User = db_session.query(User).filter(User.user_id == username)[0]
+            db_user: User = db_session.query(User).filter(User.user_id == username).first()
             if not db_user.verify_password(password):
                 print("Wrong password!")
                 return render_template("index.html")
@@ -52,7 +52,7 @@ def index():
         if request.form.get("Register") == "Register":
             username = request.form.get("username")
             password = request.form.get("password")
-            if not db_session.query(User).filter(User.user_id == username).count() == 0:
+            if db_session.query(User).filter(User.user_id == username).first():
                 print("USER EXIST!")
                 return render_template("index.html")
             db_session.add(User(username, password, float(_config.get("wallet", "balance"))))  # Default value in config
@@ -67,7 +67,7 @@ def index():
 
 @app.route("/user/<username>")
 def user(username: str):
-    db_user: User = db_session.query(User).filter(User.user_id == username)[0]
+    db_user: User = db_session.query(User).filter(User.user_id == username).first()
     wallet = WalletFactory.create_wallet(_config.get("wallet", "type"), db_user)
     return jsonify({"username": username, "balance": wallet.balance})
 
