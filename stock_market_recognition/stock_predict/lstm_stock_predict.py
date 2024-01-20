@@ -1,3 +1,5 @@
+import pandas as pd
+
 from stock_market_recognition.stock_predict.stock_predict_interface import StockPredictInterface
 from sklearn.preprocessing import MinMaxScaler
 
