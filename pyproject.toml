@@ -6,7 +6,7 @@ authors = ["Przemyslaw Lis"]
 license = "MIT"
 readme = "README.md"
 #homepage = ""  TODO
-repository = "https://github.com/balnabu/stock_market_recognition"
+repository = "https://github.com/LisPrzemyslaw/stock_market_recognition"
 #documentation = ""  TODO
 keywords = ["recognition", "stock market"]
 classifiers = []
@@ -19,9 +19,12 @@ yfinance = "*"
 python-dotenv = "*"
 SQLAlchemy = "*"
 flask = "*"
+tensorflow = "*"
+keras = "*"
+scikit-learn = "*"
 
 [tool.poetry.group.dev.dependencies]
-poetry = "^1.7.0"
+poetry = "^1.7.1"
 isort = "^5.10.1"
 black = "^23.1.0"
 flake8 = "*"
