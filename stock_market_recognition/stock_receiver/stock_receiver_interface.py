@@ -8,7 +8,7 @@ class StockReceiverInterface(ABC):
         pass
 
     @abstractmethod
-    def receive_data(self, stock_ticker: str) -> tuple[dict, pd.DataFrame]:
+    def receive_data(self, stock_ticker: str, *args, **kwargs) -> tuple[dict, pd.DataFrame]:
         """
         This method is returning data from the stock
 
