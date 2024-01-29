@@ -2,6 +2,8 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, LSTM, Dropout
 
 from stock_market_recognition.stock_predict.stock_predict_interface import StockPredictInterface
 from sklearn.preprocessing import MinMaxScaler
@@ -17,9 +19,11 @@ class LstmStockPredict(StockPredictInterface):
         super().__init__(data)
         self.scaled_data: Optional[pd.DataFrame] = None
         self.__prediction_days = None  # handled in property
-        # TODO change to np.ndarray
-        self.x_train: list= []
-        self.y_train: list = []
+        self.x_train: Optional[np.array] = None
+        self.y_train: Optional[np.array] = None
+        # self.x_test: Optional[np.array] = None
+        self.model = None
+        self.scaler = MinMaxScaler(feature_range=(0, 1))
 
     def predict(self) -> float:
         """
@@ -28,6 +32,13 @@ class LstmStockPredict(StockPredictInterface):
         :return: tomorrow price prediction
         """
         self.__scale_data()
+        self.__prepare_train_data()
+        self.__create_model()
+
+        self.fit()
+        prediction = self.model.predict(self.x_test)
+        prediction = self.scaler.inverse_transform(prediction)
+        return prediction[-1]
 
     def __scale_data(self):
         """
@@ -35,8 +46,7 @@ class LstmStockPredict(StockPredictInterface):
 
         :return: scaled data
         """
-        scaler = MinMaxScaler(feature_range=(0, 1))
-        self.scaled_data = scaler.fit_transform(self.historical_data["Close"].values.reshape(-1, 1))
+        self.scaled_data = self.scaler.fit_transform(self.historical_data["Close"].values.reshape(-1, 1))
 
     def __prepare_train_data(self):
         """
@@ -45,19 +55,42 @@ class LstmStockPredict(StockPredictInterface):
         # country = self.thicker_info.get("country", None)
         # if country is None:
         #     raise ValueError("Country is not defined")
+        x_train = []
+        y_train = []
         for x in range(self.prediction_days, len(self.scaled_data)):
-            self.x_train.append(self.scaled_data[x - self.prediction_days:x, 0])
-            self.y_train.append(self.scaled_data[x, 0])
+            x_train.append(self.scaled_data[x - self.prediction_days:x, 0])
+            y_train.append(self.scaled_data[x, 0])
+
+        print(x_train)
+        self.x_train, self.y_train = np.array(x_train), np.array(y_train)
+        self.x_train = np.reshape(self.x_train, (self.x_train.shape[0], self.x_train.shape[1], 1))
+        print(f"{self.x_train=}")
+
+    def __create_model(self):
+        """
+        This function will create the model for the neural network
+        """
+        self.model = Sequential()
+        self.model.add(LSTM(units=50, return_sequences=True, input_shape=(self.x_train.shape[1], 1)))
+        self.model.add(Dropout(0.2))
+        self.model.add(LSTM(units=50, return_sequences=True))
+        self.model.add(Dropout(0.2))
+        self.model.add(LSTM(units=50))
+        self.model.add(Dropout(0.2))
+        self.model.add(Dense(units=1))
+
+        self.model.compile(optimizer="adam", loss="mean_squared_error")
 
     def fit(self):
         """
         This function will fit the data to the model
         """
-        pass
+        self.model.fit(self.x_train, self.y_train, epochs=25, batch_size=32)
+        self.model.save("model.h5")
 
     @property
     def prediction_days(self):
-        if self.scaled_data:
+        if self.scaled_data is not None:
             return len(self.scaled_data)
         raise ValueError("Scaled data is not defined")
 

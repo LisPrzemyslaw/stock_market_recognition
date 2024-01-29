@@ -37,9 +37,10 @@ def __check_api():
 def main():
     stock_receiver = StockReceiverFactory.create_stock_receiver(_config.get("stock_receiver", "type"))
     data = stock_receiver.receive_data("msft", period=_config.get("stock_receiver", "period"))
-    print(len(data[1]))
     stock_predict = StockPredictFactory.create_stock_predict(_config.get("stock_predict", "type"), data)
-    stock_predict.predict()
+    prediction = stock_predict.predict()
+    print(f"Predicted value: {prediction}")
+    print(type(prediction))
     # print(type(stock_predict.scaled_data[0, 0]))
 
 
