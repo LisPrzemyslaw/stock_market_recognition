@@ -12,7 +12,7 @@ keywords = ["recognition", "stock market"]
 classifiers = []
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.11, <3.12"
 pandas = "*"
 numpy = "*"
 yfinance = "*"
@@ -20,8 +20,10 @@ python-dotenv = "*"
 SQLAlchemy = "*"
 flask = "*"
 tensorflow = "*"
+tensorflow-io-gcs-filesystem = "0.31.0"
 keras = "*"
 scikit-learn = "*"
+matplotlib = "*"
 
 [tool.poetry.group.dev.dependencies]
 poetry = "^1.7.1"
