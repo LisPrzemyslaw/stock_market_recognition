@@ -12,12 +12,14 @@ class StockPredictFactory:
     _ALL_STOCK_PREDICT = {"LSTM": LstmStockPredict}
 
     @staticmethod
-    def create_stock_predict(predict_name: str, data: tuple[dict, pd.DataFrame]) -> StockPredictInterface:
+    def create_stock_predict(predict_name: str, data: tuple[dict, pd.DataFrame], prediction_days: int) -> StockPredictInterface:
         """
         This function will create a stock predict due to given name
 
         :param predict_name: name to create (neural network or regression)
+        :param data: data to proceed. Received from stock receiver
+        :param prediction_days: how many days to predict
 
         :return: stock predict class
         """
-        return StockPredictFactory._ALL_STOCK_PREDICT[predict_name.upper()](data)
+        return StockPredictFactory._ALL_STOCK_PREDICT[predict_name.upper()](data, prediction_days)

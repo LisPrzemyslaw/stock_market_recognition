@@ -12,24 +12,23 @@ from sklearn.preprocessing import MinMaxScaler
 class LstmStockPredict(StockPredictInterface):
     """This class will predict the stock market using LSTM neural network model. Prediction will base on Close price"""
 
-    def __init__(self, data: tuple[dict, pd.DataFrame]):
+    def __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int):
         """
         :param data: data received from stock receiver
         """
-        super().__init__(data)
+        super().__init__(data, prediction_days)
         self.scaled_data: Optional[pd.DataFrame] = None
-        self.__prediction_days = None  # handled in property
         self.x_train: Optional[np.array] = None
         self.y_train: Optional[np.array] = None
-        # self.x_test: Optional[np.array] = None
+        self.x_test: np.array = self.historical_data["Close"].values[-self.prediction_days:].reshape(-1, 1)
         self.model = None
         self.scaler = MinMaxScaler(feature_range=(0, 1))
 
-    def predict(self) -> float:
+    def predict(self) -> np.array:
         """
         This function will predict if the stock market is ready to buy
 
-        :return: tomorrow price prediction
+        :return: last days predictions
         """
         self.__scale_data()
         self.__prepare_train_data()
@@ -38,7 +37,7 @@ class LstmStockPredict(StockPredictInterface):
         self.fit()
         prediction = self.model.predict(self.x_test)
         prediction = self.scaler.inverse_transform(prediction)
-        return prediction[-1]
+        return prediction
 
     def __scale_data(self):
         """
@@ -61,10 +60,8 @@ class LstmStockPredict(StockPredictInterface):
             x_train.append(self.scaled_data[x - self.prediction_days:x, 0])
             y_train.append(self.scaled_data[x, 0])
 
-        print(x_train)
         self.x_train, self.y_train = np.array(x_train), np.array(y_train)
         self.x_train = np.reshape(self.x_train, (self.x_train.shape[0], self.x_train.shape[1], 1))
-        print(f"{self.x_train=}")
 
     def __create_model(self):
         """
@@ -87,13 +84,5 @@ class LstmStockPredict(StockPredictInterface):
         """
         self.model.fit(self.x_train, self.y_train, epochs=25, batch_size=32)
         self.model.save("model.h5")
-
-    @property
-    def prediction_days(self):
-        if self.scaled_data is not None:
-            return len(self.scaled_data)
-        raise ValueError("Scaled data is not defined")
-
-    @prediction_days.setter
-    def prediction_days(self, value):
-        raise NotImplementedError("Prediction days cannot be set")
+        self.model.summary()
+        print(self.model.summary())

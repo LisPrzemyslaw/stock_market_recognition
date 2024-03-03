@@ -6,6 +6,7 @@ import os
 import configparser
 
 import dotenv
+import matplotlib.pyplot as plt
 
 from stock_market_recognition.database.database import User, db_session
 from stock_market_recognition.stock_predict.lstm_stock_predict import LstmStockPredict
@@ -16,6 +17,9 @@ from stock_market_recognition.wallet.wallet_factory import WalletFactory
 _config = configparser.ConfigParser()
 _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))
 dotenv.load_dotenv(os.path.join(os.getcwd(), "configuration", ".env"))
+
+"""Constants"""
+PREDICTION_DAYS = 30
 
 
 def __check_api():
@@ -37,12 +41,15 @@ def __check_api():
 def main():
     stock_receiver = StockReceiverFactory.create_stock_receiver(_config.get("stock_receiver", "type"))
     data = stock_receiver.receive_data("msft", period=_config.get("stock_receiver", "period"))
-    stock_predict = StockPredictFactory.create_stock_predict(_config.get("stock_predict", "type"), data)
+    stock_predict = StockPredictFactory.create_stock_predict(_config.get("stock_predict", "type"), data, PREDICTION_DAYS)
     prediction = stock_predict.predict()
-    print(f"Predicted value: {prediction}")
-    print(type(prediction))
-    # print(type(stock_predict.scaled_data[0, 0]))
-
+    # print(f"Predicted value: {prediction}")
+    # print(f"Real value: {data[1]['Close'].values[-1]}")
+    plt.plot(data[1]["Close"].values[-PREDICTION_DAYS:], label="Real price", color="black")
+    plt.plot([_pred[0] for _pred in prediction], label="Predicted price", color="green")
+    plt.x_label("Time")
+    plt.legend()
+    plt.show()
 
 if __name__ == "__main__":
     main()
