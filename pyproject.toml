@@ -28,7 +28,7 @@ matplotlib = "*"
 [tool.poetry.group.dev.dependencies]
 poetry = "^1.7.1"
 isort = "^5.10.1"
-black = "^23.1.0"
+black = "^24.3.0"
 flake8 = "*"
 
 [tool.black]
