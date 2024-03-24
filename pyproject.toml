@@ -30,6 +30,7 @@ poetry = "^1.7.1"
 isort = "^5.10.1"
 black = "^24.3.0"
 flake8 = "*"
+flask_swagger_ui = "*"
 
 [tool.black]
 line-length = 180

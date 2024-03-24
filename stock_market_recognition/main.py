@@ -15,6 +15,21 @@ _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))
 
 app = Flask(__name__)
 
+# TODO Swagger
+# from flask_swagger_ui import get_swaggerui_blueprint
+#
+# SWAGGER_URL="/swagger"
+# API_URL="/static/swagger.json"
+#
+# swagger_ui_blueprint = get_swaggerui_blueprint(
+#     SWAGGER_URL,
+#     API_URL,
+#     config={
+#         'app_name': 'Access API'
+#     }
+# )
+# app.register_blueprint(swagger_ui_blueprint, url_prefix=SWAGGER_URL)
+
 
 @app.route("/", methods=["GET", "POST"])
 def index():
