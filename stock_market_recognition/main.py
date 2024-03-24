@@ -14,6 +14,7 @@ _config = configparser.ConfigParser()
 _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))
 
 app = Flask(__name__)
+AUTH_HEADER = 'Authorization'
 
 # TODO Swagger
 # from flask_swagger_ui import get_swaggerui_blueprint
@@ -44,8 +45,9 @@ def index():
             if not db_user.verify_password(password):
                 print("Wrong password!")
                 return render_template("index.html")
-            return redirect(url_for("user", username=username))
 
+            request.headers[AUTH_HEADER] = db_user.create_auth_token()
+            return redirect(url_for("user", username=username))
         if request.form.get("Register") == "Register":
             username = request.form.get("username")
             password = request.form.get("password")
@@ -56,15 +58,19 @@ def index():
             db_session.commit()
             return redirect(url_for("user", username=username))
 
-    elif request.method == "GET":
+    if request.method == "GET":
         return render_template("index.html", form=request.form)
-
     return render_template("index.html")
 
 
 @app.route("/user/<username>")
 def user(username: str):
     db_user: User = db_session.query(User).filter(User.user_id == username).first()
+    token = request.headers.get(AUTH_HEADER)
+    if not db_user.is_auth(token):
+        print("Not authorized!")
+        return redirect(url_for("index"))
+
     wallet = WalletFactory.create_wallet(_config.get("wallet", "type"), db_user)
     return jsonify({"username": username, "balance": wallet.balance})
 
