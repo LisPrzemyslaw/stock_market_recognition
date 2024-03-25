@@ -3,7 +3,7 @@ import hashlib
 import configparser
 from datetime import datetime, timedelta
 from uuid import uuid4, UUID
-
+import secrets
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy import Float, Column, String, ForeignKey, create_engine
 
@@ -91,6 +91,7 @@ class User(_Base):
         if self.auth_token is None:
             self.__token_creation_time = datetime.now()
             self.__auth_token = uuid4()
+            self.__auth_token = secrets.token_hex()  # TODO
         return self.auth_token
 
     def is_auth(self, auth_token: UUID) -> bool:
