@@ -19,7 +19,7 @@ _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))
 dotenv.load_dotenv(os.path.join(os.getcwd(), "configuration", ".env"))
 
 """Constants"""
-PREDICTION_DAYS = 30
+PREDICTION_DAYS = 7
 
 
 def __check_api():

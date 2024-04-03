@@ -12,14 +12,13 @@ from sklearn.preprocessing import MinMaxScaler
 class LstmStockPredict(StockPredictInterface):
     """This class will predict the stock market using LSTM neural network model. Prediction will base on Close price"""
 
-    def __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int):
+    def __init__(self, data: list[tuple[dict, pd.DataFrame]], prediction_days: int):
         """
-        :param data: data received from stock receiver
+        :param data: list of combined data from stock receiver
         """
         super().__init__(data, prediction_days)
         self.scaled_data: Optional[pd.DataFrame] = None
-        self.x_train: Optional[np.array] = None
-        self.y_train: Optional[np.array] = None
+
         self.x_test: np.array = self.historical_data["Close"].values[-self.prediction_days:].reshape(-1, 1)
         self.model = None
         self.scaler = MinMaxScaler(feature_range=(0, 1))
@@ -54,13 +53,15 @@ class LstmStockPredict(StockPredictInterface):
         # country = self.thicker_info.get("country", None)
         # if country is None:
         #     raise ValueError("Country is not defined")
-        x_train = []
+        x_train_historical_data = []
+        x_train_stock_ticker = []
         y_train = []
         for x in range(self.prediction_days, len(self.scaled_data)):
-            x_train.append(self.scaled_data[x - self.prediction_days:x, 0])
+            x_train_historical_data.append(self.scaled_data[x - self.prediction_days:x, 0])
+            x_train_stock_ticker.append("")
             y_train.append(self.scaled_data[x, 0])
 
-        self.x_train, self.y_train = np.array(x_train), np.array(y_train)
+        self.x_train, self.y_train = np.array(x_train_historical_data), np.array(y_train)
         self.x_train = np.reshape(self.x_train, (self.x_train.shape[0], self.x_train.shape[1], 1))
 
     def __create_model(self):

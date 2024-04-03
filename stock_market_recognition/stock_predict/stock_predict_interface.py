@@ -1,16 +1,25 @@
 from abc import ABC, abstractmethod
+from typing import Optional
 
 import numpy as np
 import pandas as pd
 
 
 class StockPredictInterface(ABC):
-    def __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int):
+    def __init__(self, data: list[tuple[dict, pd.DataFrame]], prediction_days: int):
         """
 
-        :param data: data from stock receiver
+        :param data: list of combined data from stock receiver
         """
-        self.thicker_info, self.historical_data = data
+
+        self.historical_data = None
+        self.thicker_info = None
+        self.training_data_dict = None
+
+        self.thicker_info_zip, self.historical_data_zip = None, None
+
+        self.x_train: Optional[np.array] = None
+        self.y_train: Optional[np.array] = None
         self.scaled_data = None
         self.prediction_days = prediction_days
 
@@ -24,3 +33,10 @@ class StockPredictInterface(ABC):
         :return: tomorrow price prediction
         """
         pass
+
+    def prepare_data(self, data: list[tuple[dict, pd.DataFrame]]):
+        self.thicker_info = [thicker_info for thicker_info, _ in data]
+        self.historical_data = [historical_data for _, historical_data in data]
+        self.thicker_info_zip, self.historical_data_zip = zip(*data)
+        print("IS EQUAL: ", self.thicker_info == self.thicker_info_zip, self.historical_data == self.historical_data_zip)
+        self.training_data_dict = {thicker_info["symbol"]: historical_data for thicker_info, historical_data in data}
