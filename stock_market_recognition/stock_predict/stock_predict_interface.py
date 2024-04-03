@@ -53,6 +53,4 @@ class StockPredictInterface(ABC):
         """
         self.ticker_info = [ticker_info for ticker_info, _ in data]
         self.historical_data = [historical_data for _, historical_data in data]
-        self.thicker_info_zip, self.historical_data_zip = zip(*data)
-        print("IS EQUAL: ", self.ticker_info == self.thicker_info_zip, self.historical_data == self.historical_data_zip)
         self.training_data_dict = {thicker_info["symbol"]: historical_data for thicker_info, historical_data in data}
