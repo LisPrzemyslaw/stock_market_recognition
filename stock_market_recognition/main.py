@@ -4,12 +4,11 @@ There will be flask api for this app
 import os
 import configparser
 
-import dotenv
-from flask import Flask, jsonify, request, url_for, redirect, render_template
+from flask import Flask, jsonify, request, url_for, redirect, render_template, make_response
 
+from stock_market_recognition.database.auth_token import AuthTokenContainer
 from stock_market_recognition.database.database import User, db_session
 from stock_market_recognition.wallet.wallet_factory import WalletFactory
-
 _config = configparser.ConfigParser()
 _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))
 
@@ -46,17 +45,24 @@ def index():
                 print("Wrong password!")
                 return render_template("index.html")
 
-            request.headers[AUTH_HEADER] = db_user.create_auth_token()
-            return redirect(url_for("user", username=username))
+            response = make_response(redirect(url_for("user", username=username)))
+            response.headers[AUTH_HEADER] = f"Bearer {AuthTokenContainer.add_token(db_user.user_id)}"
+            print(f"SEND {response.headers[AUTH_HEADER]}")
+            return response
+
         if request.form.get("Register") == "Register":
             username = request.form.get("username")
             password = request.form.get("password")
             if db_session.query(User).filter(User.user_id == username).first():
                 print("USER EXIST!")
                 return render_template("index.html")
-            db_session.add(User(username, password, float(_config.get("wallet", "balance"))))  # Default value in config
+            db_user: User = User(username, password, float(_config.get("wallet", "balance")))  # Default value in config
+            db_session.add(db_user)
             db_session.commit()
-            return redirect(url_for("user", username=username))
+
+            response = make_response(redirect(url_for("user", username=username)))
+            response.headers[AUTH_HEADER] = f"Bearer {AuthTokenContainer.add_token(db_user.user_id)}"
+            return response
 
     if request.method == "GET":
         return render_template("index.html", form=request.form)
@@ -66,8 +72,13 @@ def index():
 @app.route("/user/<username>")
 def user(username: str):
     db_user: User = db_session.query(User).filter(User.user_id == username).first()
-    token = request.headers.get(AUTH_HEADER)
-    if not db_user.is_auth(token):
+    try:
+        # TODO
+        token = request.headers.get(AUTH_HEADER).replace("Bearer ", "")  # For comparison only bare token is needed
+    except AttributeError:
+        print("Not authorized!")
+        return redirect(url_for("index"))
+    if not AuthTokenContainer.is_user_auth(db_user.user_id, token):
         print("Not authorized!")
         return redirect(url_for("index"))
 

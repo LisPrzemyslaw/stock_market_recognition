@@ -29,8 +29,6 @@ class Stock(_Base):
 class User(_Base):
     __tablename__ = "user"
 
-    AUTH_TIME = 10  # minutes
-
     user_id = Column("user_id", String, primary_key=True)
     password = Column("password", String)
     balance = Column("balance", Float)
@@ -39,9 +37,6 @@ class User(_Base):
         self.user_id = user_id
         self.password = self.__encode_password(password)
         self.balance = balance
-
-        self.__auth_token = None
-        self.__token_creation_time = None
 
     @staticmethod
     def __encode_password(password: str) -> str:
@@ -67,42 +62,6 @@ class User(_Base):
         :return: boolean if password is the same as in database
         """
         return self.__encode_password(password) == self.password
-
-    @property
-    def auth_token(self) -> UUID | None:
-        """
-        This function is used to get auth token
-
-        :return: auth token
-        """
-        if self.__token_creation_time is None:
-            self.__auth_token = None  # To be sure that both are set at the same time
-            return None
-        if self.__token_creation_time + timedelta(minutes=self.AUTH_TIME) > datetime.now():
-            self.__auth_token = None
-        return self.__auth_token
-
-    def create_auth_token(self) -> UUID:
-        """
-        This function is used to create auth token
-
-        :return: auth token
-        """
-        if self.auth_token is None:
-            self.__token_creation_time = datetime.now()
-            self.__auth_token = uuid4()
-            self.__auth_token = secrets.token_hex()  # TODO
-        return self.auth_token
-
-    def is_auth(self, auth_token: UUID) -> bool:
-        """
-        This function is used to check if user is authenticated
-
-        :param auth_token: given auth token
-
-        :return: boolean if user is authenticated
-        """
-        return self.auth_token == auth_token
 
     def __repr__(self):
         return f"<User {self.user_id}> {self.balance} USD"
