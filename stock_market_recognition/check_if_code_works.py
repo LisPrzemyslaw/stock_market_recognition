@@ -41,10 +41,16 @@ def __check_api():
 def main():
     stock_receiver = StockReceiverFactory.create_stock_receiver(_config.get("stock_receiver", "type"))
     data = stock_receiver.receive_data("msft", period=_config.get("stock_receiver", "period"))
-    stock_predict = StockPredictFactory.create_stock_predict(_config.get("stock_predict", "type"), data, PREDICTION_DAYS)
-    prediction = stock_predict.predict()
-    # print(f"Predicted value: {prediction}")
-    # print(f"Real value: {data[1]['Close'].values[-1]}")
+    stock_predict = StockPredictFactory.create_stock_predict(_config.get("stock_predict", "type"), [data], PREDICTION_DAYS)
+
+    # COMMENT IF NEEDED
+    stock_predict.fit()
+
+    ticker_symbol = data[0]["symbol"]
+    last_days_close_value = data[1]["Close"].values[-PREDICTION_DAYS:]
+    prediction = stock_predict.predict(ticker_symbol, last_days_close_value)
+    print(f"Predicted value: {prediction}")
+    print(f"Real value: {data[1]['Close'].values[-1]}")
     plt.plot(data[1]["Close"].values[-PREDICTION_DAYS:], label="Real price", color="black")
     plt.plot([_pred[0] for _pred in prediction], label="Predicted price", color="green")
     plt.x_label("Time")
