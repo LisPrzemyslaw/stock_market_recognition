@@ -3,8 +3,8 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Dense, LSTM, Dropout
+from tensorflow.keras.models import Sequential, load_model, Model
+from tensorflow.keras.layers import Dense, LSTM, Dropout, Input, concatenate
 
 from stock_market_recognition.stock_predict.stock_predict_interface import StockPredictInterface
 from sklearn.preprocessing import MinMaxScaler
@@ -22,7 +22,7 @@ class LstmStockPredict(StockPredictInterface):
         super().__init__(data, prediction_days)
         self.scaled_data: Optional[pd.DataFrame] = None
 
-        self.model: Optional[Sequential] = None
+        self.model: Optional[Model] = None
         self.scaler = MinMaxScaler(feature_range=(0, 1))
 
     def predict(self, ticker_symbol: str, last_days_close_values: np.array) -> np.array:
@@ -75,21 +75,54 @@ class LstmStockPredict(StockPredictInterface):
         self.x_train_historical_data = np.reshape(self.x_train_historical_data, (self.x_train_historical_data.shape[0], self.x_train_historical_data.shape[1], 1))
         self.x_train_stock_ticker = np.array(x_train_stock_ticker)
         self.y_train = np.array(y_train)
+        # print(f"SHAPES: {self.x_train_historical_data.shape=}, {self.x_train_stock_ticker.shape=}, {self.y_train.shape=}")
+
+    # def __create_model(self):
+    #     """
+    #     This function will create the model for the neural network
+    #     """
+    #     self.model = Sequential()
+    #     self.model.add(LSTM(units=50, return_sequences=True, input_shape=(self.x_train_historical_data.shape[1], 1)))
+    #     self.model.add(Dropout(0.2))
+    #     self.model.add(LSTM(units=50, return_sequences=True))
+    #     self.model.add(Dropout(0.2))
+    #     self.model.add(LSTM(units=50))
+    #     self.model.add(Dropout(0.2))
+    #     self.model.add(Dense(units=1))
+    #
+    #     self.model.compile(optimizer="adam", loss="mean_squared_error")``
 
     def __create_model(self):
         """
         This function will create the model for the neural network
         """
-        self.model = Sequential()
-        self.model.add(LSTM(units=50, return_sequences=True, input_shape=(self.x_train_historical_data.shape[1], 1)))
-        self.model.add(Dropout(0.2))
-        self.model.add(LSTM(units=50, return_sequences=True))
-        self.model.add(Dropout(0.2))
-        self.model.add(LSTM(units=50))
-        self.model.add(Dropout(0.2))
-        self.model.add(Dense(units=1))
+        stock_ticker_input = Input(shape=(1,), name="stock_ticker")
+        historical_data_input = Input(shape=(self.x_train_historical_data.shape[1],), name="historical_data")
 
-        self.model.compile(optimizer="adam", loss="mean_squared_error")
+        lstm_stock_ticker = LSTM(units=50, return_sequences=True)(stock_ticker_input)
+        lstm_stock_ticker = Dropout(0.2)(lstm_stock_ticker)
+        lstm_stock_ticker = LSTM(units=50, return_sequences=True)(lstm_stock_ticker)
+        lstm_stock_ticker = Dropout(0.2)(lstm_stock_ticker)
+        lstm_stock_ticker = LSTM(units=50)(lstm_stock_ticker)
+        lstm_stock_ticker = Dropout(0.2)(lstm_stock_ticker)
+        lstm_stock_ticker = Dense(units=4)(lstm_stock_ticker)
+        lstm_stock_ticker = Model(inputs=stock_ticker_input, outputs=lstm_stock_ticker)
+
+        lstm_historical_data = LSTM(units=50, return_sequences=True)(historical_data_input)
+        lstm_historical_data = Dropout(0.2)(lstm_historical_data)
+        lstm_historical_data = LSTM(units=50, return_sequences=True)(lstm_historical_data)
+        lstm_historical_data = Dropout(0.2)(lstm_historical_data)
+        lstm_historical_data = LSTM(units=50)(lstm_historical_data)
+        lstm_historical_data = Dropout(0.2)(lstm_historical_data)
+        lstm_historical_data = Dense(units=4)(lstm_historical_data)
+        lstm_historical_data = Model(inputs=historical_data_input, outputs=lstm_historical_data)
+
+        combined = concatenate([lstm_stock_ticker.output, lstm_historical_data.output])
+
+        output_layer = Dense(4, activation="relu")(combined)
+        output_layer = Dense(1, activation="linear")(output_layer)
+
+        self.model = Model(inputs=[lstm_stock_ticker.input, lstm_historical_data.input], outputs=output_layer)
 
     def fit(self):
         """
@@ -97,7 +130,7 @@ class LstmStockPredict(StockPredictInterface):
         """
         self.__prepare_train_data()
         self.__create_model()
-        self.model.fit([self.x_train_historical_data, self.x_train_stock_ticker], self.y_train, epochs=25, batch_size=32)
+        self.model.fit({"stock_ticker": self.x_train_stock_ticker, "historical_data": self.x_train_historical_data}, self.y_train, epochs=25, batch_size=32)
         self.model.save(self.__MODEL_PATH)
         self.model.summary()
         print(self.model.summary())
