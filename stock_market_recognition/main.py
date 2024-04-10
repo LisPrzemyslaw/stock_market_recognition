@@ -78,7 +78,6 @@ def index():
 def user(username: str):
     db_user: User = db_session.query(User).filter(User.user_id == username).first()
     token = request.cookies.get(AUTH_KEY, None)
-    print(token)
     if not AuthTokenContainer.is_user_auth(db_user.user_id, token):
         print("Not authorized!")
         return redirect(url_for("index"))
