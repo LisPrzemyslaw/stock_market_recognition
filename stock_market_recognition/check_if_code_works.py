@@ -9,7 +9,6 @@ import dotenv
 import matplotlib.pyplot as plt
 
 from stock_market_recognition.database.database import User, db_session
-from stock_market_recognition.stock_predict.lstm_stock_predict import LstmStockPredict
 from stock_market_recognition.stock_predict.stock_predict_factory import StockPredictFactory
 from stock_market_recognition.stock_receiver.stock_receiver_factory import StockReceiverFactory
 from stock_market_recognition.wallet.wallet_factory import WalletFactory
@@ -51,7 +50,6 @@ def main():
         # Only for test purpouses
         last_days_close_value = data[1]["Close"].values[-PREDICTION_DAYS:]
         real_value = data[1]['Close'].values[-1]
-
 
     # COMMENT IF NEEDED
     STOCK_PREDICTORS[STOCK_TICKERS[0]].fit()
