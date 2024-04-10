@@ -6,7 +6,6 @@ import os
 import configparser
 
 import dotenv
-import matplotlib.pyplot as plt
 
 from stock_market_recognition.database.database import User, db_session
 from stock_market_recognition.stock_predict.stock_predict_factory import StockPredictFactory
