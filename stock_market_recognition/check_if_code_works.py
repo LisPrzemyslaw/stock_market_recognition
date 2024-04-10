@@ -9,7 +9,6 @@ import dotenv
 import matplotlib.pyplot as plt
 
 from stock_market_recognition.database.database import User, db_session
-from stock_market_recognition.stock_predict.lstm_stock_predict import LstmStockPredict
 from stock_market_recognition.stock_predict.stock_predict_factory import StockPredictFactory
 from stock_market_recognition.stock_receiver.stock_receiver_factory import StockReceiverFactory
 from stock_market_recognition.wallet.wallet_factory import WalletFactory
@@ -19,7 +18,11 @@ _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))
 dotenv.load_dotenv(os.path.join(os.getcwd(), "configuration", ".env"))
 
 """Constants"""
-PREDICTION_DAYS = 30
+PREDICTION_DAYS = 7
+STOCK_TICKERS = ("msft",)
+
+"""Constants but variables :)"""
+STOCK_PREDICTORS = {}
 
 
 def __check_api():
@@ -40,16 +43,20 @@ def __check_api():
 
 def main():
     stock_receiver = StockReceiverFactory.create_stock_receiver(_config.get("stock_receiver", "type"))
-    data = stock_receiver.receive_data("msft", period=_config.get("stock_receiver", "period"))
-    stock_predict = StockPredictFactory.create_stock_predict(_config.get("stock_predict", "type"), data, PREDICTION_DAYS)
-    prediction = stock_predict.predict()
-    # print(f"Predicted value: {prediction}")
-    # print(f"Real value: {data[1]['Close'].values[-1]}")
-    plt.plot(data[1]["Close"].values[-PREDICTION_DAYS:], label="Real price", color="black")
-    plt.plot([_pred[0] for _pred in prediction], label="Predicted price", color="green")
-    plt.x_label("Time")
-    plt.legend()
-    plt.show()
+    for stock_ticker in STOCK_TICKERS:
+        data = stock_receiver.receive_data(stock_ticker, period=_config.get("stock_receiver", "period"))
+        STOCK_PREDICTORS[stock_ticker] = StockPredictFactory.create_stock_predict(_config.get("stock_predict", "type"), data, PREDICTION_DAYS)
+
+        # Only for test purpouses
+        last_days_close_value = data[1]["Close"].values[-PREDICTION_DAYS:]
+        real_value = data[1]['Close'].values[-1]
+
+    # COMMENT IF NEEDED
+    # STOCK_PREDICTORS[STOCK_TICKERS[0]].fit()
+
+    prediction = STOCK_PREDICTORS[STOCK_TICKERS[0]].predict(last_days_close_value)
+    print(f"Predicted value: {prediction}")
+    print(f"Real value: {real_value}")
 
 
 if __name__ == "__main__":
