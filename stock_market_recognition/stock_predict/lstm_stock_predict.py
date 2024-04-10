@@ -1,8 +1,9 @@
+import os
 from typing import Optional
 
 import numpy as np
 import pandas as pd
-from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import Dense, LSTM, Dropout
 
 from stock_market_recognition.stock_predict.stock_predict_interface import StockPredictInterface
@@ -17,25 +18,29 @@ class LstmStockPredict(StockPredictInterface):
         :param data: data received from stock receiver
         """
         super().__init__(data, prediction_days)
+
         self.scaled_data: Optional[pd.DataFrame] = None
         self.x_train: Optional[np.array] = None
         self.y_train: Optional[np.array] = None
-        self.x_test: np.array = self.historical_data["Close"].values[-self.prediction_days:].reshape(-1, 1)
         self.model = None
         self.scaler = MinMaxScaler(feature_range=(0, 1))
 
-    def predict(self) -> np.array:
+    def predict(self, last_days_close_values: np.array) -> np.array:
         """
         This function will predict if the stock market is ready to buy
 
+        :param last_days_close_values: last days close values. Data from stock receiver without scaling and reshaping. It is done inside this method.
+
         :return: last days predictions
         """
-        self.__scale_data()
-        self.__prepare_train_data()
-        self.__create_model()
+        try:
+            self.model = load_model(self.model_path)
+        except FileNotFoundError:
+            print(f"{os.path.exists(self.model_path)=}")
+            self.fit()
 
-        self.fit()
-        prediction = self.model.predict(self.x_test)
+        scaled_last_days_close_values = self.scaler.fit_transform(last_days_close_values.values.reshape(-1, 1))
+        prediction = self.model.predict(scaled_last_days_close_values)
         prediction = self.scaler.inverse_transform(prediction)
         return prediction
 
@@ -82,7 +87,15 @@ class LstmStockPredict(StockPredictInterface):
         """
         This function will fit the data to the model
         """
+        self.__scale_data()
+        self.__prepare_train_data()
+        self.__create_model()
+
         self.model.fit(self.x_train, self.y_train, epochs=25, batch_size=32)
-        self.model.save("model.h5")
+        self.model.save(self.model_path)
         self.model.summary()
         print(self.model.summary())
+
+    @property
+    def model_path(self):
+        return os.path.join(os.getcwd(), "saved_models", f"{self.name}.h5")
