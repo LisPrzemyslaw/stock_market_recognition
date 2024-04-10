@@ -1,6 +1,5 @@
 import secrets
 from datetime import timedelta, datetime
-from uuid import UUID
 
 
 class AuthToken:
