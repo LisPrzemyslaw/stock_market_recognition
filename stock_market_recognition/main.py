@@ -4,7 +4,6 @@ There will be flask api for this app
 import os
 import configparser
 
-import dotenv
 from flask import Flask, jsonify, request, url_for, redirect, render_template
 
 from stock_market_recognition.database.database import User, db_session
