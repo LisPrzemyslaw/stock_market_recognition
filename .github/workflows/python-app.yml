@@ -36,7 +36,7 @@ jobs:
     - name: Static code analysis
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        flake8 $(git ls-files '*.py')
+        poetry run flake8 $(git ls-files '*.py')
         # TODO add other packages also
 
     # TODO if tests are prepared
