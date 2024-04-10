@@ -52,17 +52,11 @@ def main():
         real_value = data[1]['Close'].values[-1]
 
     # COMMENT IF NEEDED
-    STOCK_PREDICTORS[STOCK_TICKERS[0]].fit()
+    # STOCK_PREDICTORS[STOCK_TICKERS[0]].fit()
 
     prediction = STOCK_PREDICTORS[STOCK_TICKERS[0]].predict(last_days_close_value)
     print(f"Predicted value: {prediction}")
     print(f"Real value: {real_value}")
-
-    plt.plot(data[1]["Close"].values[-PREDICTION_DAYS:], label="Real price", color="black")
-    plt.plot([_pred[0] for _pred in prediction], label="Predicted price", color="green")
-    plt.x_label("Time")
-    plt.legend()
-    plt.show()
 
 
 if __name__ == "__main__":

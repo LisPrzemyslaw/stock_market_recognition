@@ -14,7 +14,7 @@ class StockPredictInterface(ABC):
         self.thicker_info, self.historical_data = data
         self.scaled_data = None
         self.prediction_days = prediction_days
-        self.name = self.thicker_info["symbol"]
+        self.name = self.thicker_info["symbol"].lower()
 
     @abstractmethod
     def predict(self, last_days_close_values: np.array) -> np.array:

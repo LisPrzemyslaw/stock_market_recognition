@@ -39,10 +39,10 @@ class LstmStockPredict(StockPredictInterface):
             print(f"{os.path.exists(self.model_path)=}")
             self.fit()
 
-        scaled_last_days_close_values = self.scaler.fit_transform(last_days_close_values.values.reshape(-1, 1))
+        scaled_last_days_close_values = self.scaler.fit_transform(last_days_close_values.reshape(-1, 1))
         prediction = self.model.predict(scaled_last_days_close_values)
         prediction = self.scaler.inverse_transform(prediction)
-        return prediction
+        return prediction[-1][0]
 
     def __scale_data(self):
         """
