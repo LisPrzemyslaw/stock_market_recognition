@@ -13,7 +13,7 @@ _config = configparser.ConfigParser()
 _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))
 
 app = Flask(__name__)
-AUTH_HEADER = 'Authorization'
+AUTH_KEY = 'auth_token'
 
 # TODO Swagger
 # from flask_swagger_ui import get_swaggerui_blueprint
@@ -46,8 +46,13 @@ def index():
                 return render_template("index.html")
 
             response = make_response(redirect(url_for("user", username=username)))
-            response.headers[AUTH_HEADER] = f"Bearer {AuthTokenContainer.add_token(db_user.user_id)}"
-            print(f"SEND {response.headers[AUTH_HEADER]}")
+            response.set_cookie(AUTH_KEY, AuthTokenContainer.add_token(db_user.user_id), httponly=True, secure=True, samesite='Lax')
+            """
+            TODO move it into documentation
+            HttpOnly - Zapobiega dostępowi do wartości cookie przez JavaScript po stronie klienta, co minimalizuje ryzyko ataków XSS (Cross-Site Scripting).
+            Secure - Wymusza przesyłanie cookie tylko przez bezpieczne połączenie (HTTPS), co chroni przed przechwyceniem tokenu przez ataki typu man-in-the-middle.
+            SameSite - Ogranicza wysyłanie cookie do żądań pochodzących z tego samego źródła, co może pomóc w ochronie przed atakami CSRF (Cross-Site Request Forgery).
+            """
             return response
 
         if request.form.get("Register") == "Register":
@@ -61,7 +66,7 @@ def index():
             db_session.commit()
 
             response = make_response(redirect(url_for("user", username=username)))
-            response.headers[AUTH_HEADER] = f"Bearer {AuthTokenContainer.add_token(db_user.user_id)}"
+            response.set_cookie(AUTH_KEY, AuthTokenContainer.add_token(db_user.user_id), httponly=True, secure=True, samesite='Lax')
             return response
 
     if request.method == "GET":
@@ -72,12 +77,8 @@ def index():
 @app.route("/user/<username>")
 def user(username: str):
     db_user: User = db_session.query(User).filter(User.user_id == username).first()
-    try:
-        # TODO
-        token = request.headers.get(AUTH_HEADER).replace("Bearer ", "")  # For comparison only bare token is needed
-    except AttributeError:
-        print("Not authorized!")
-        return redirect(url_for("index"))
+    token = request.cookies.get(AUTH_KEY, None)
+    print(token)
     if not AuthTokenContainer.is_user_auth(db_user.user_id, token):
         print("Not authorized!")
         return redirect(url_for("index"))

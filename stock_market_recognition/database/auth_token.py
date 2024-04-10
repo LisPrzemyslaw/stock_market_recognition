@@ -57,6 +57,10 @@ class AuthTokenContainer:
     def add_token(user_id: str) -> str:
         """
         This function create token and returns it.
+
+        :param user_id: user id
+
+        :return: auth token
         """
         AuthTokenContainer.__AUTH_TOKENS[user_id] = AuthToken()
         return AuthTokenContainer.__AUTH_TOKENS[user_id].auth_token
