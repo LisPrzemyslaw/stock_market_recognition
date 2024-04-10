@@ -4,15 +4,16 @@ There will be flask api for this app
 import os
 import configparser
 
-from flask import Flask, jsonify, request, url_for, redirect, render_template
+from flask import Flask, jsonify, request, url_for, redirect, render_template, make_response
 
+from stock_market_recognition.database.auth_token import AuthTokenContainer
 from stock_market_recognition.database.database import User, db_session
 from stock_market_recognition.wallet.wallet_factory import WalletFactory
-
 _config = configparser.ConfigParser()
 _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))
 
 app = Flask(__name__)
+AUTH_KEY = 'auth_token'
 
 # TODO Swagger
 # from flask_swagger_ui import get_swaggerui_blueprint
@@ -43,7 +44,16 @@ def index():
             if not db_user.verify_password(password):
                 print("Wrong password!")
                 return render_template("index.html")
-            return redirect(url_for("user", username=username))
+
+            response = make_response(redirect(url_for("user", username=username)))
+            response.set_cookie(AUTH_KEY, AuthTokenContainer.add_token(db_user.user_id), httponly=True, secure=True, samesite='Lax')
+            """
+            TODO move it into documentation
+            HttpOnly - Zapobiega dostępowi do wartości cookie przez JavaScript po stronie klienta, co minimalizuje ryzyko ataków XSS (Cross-Site Scripting).
+            Secure - Wymusza przesyłanie cookie tylko przez bezpieczne połączenie (HTTPS), co chroni przed przechwyceniem tokenu przez ataki typu man-in-the-middle.
+            SameSite - Ogranicza wysyłanie cookie do żądań pochodzących z tego samego źródła, co może pomóc w ochronie przed atakami CSRF (Cross-Site Request Forgery).
+            """
+            return response
 
         if request.form.get("Register") == "Register":
             username = request.form.get("username")
@@ -51,19 +61,27 @@ def index():
             if db_session.query(User).filter(User.user_id == username).first():
                 print("USER EXIST!")
                 return render_template("index.html")
-            db_session.add(User(username, password, float(_config.get("wallet", "balance"))))  # Default value in config
+            db_user: User = User(username, password, float(_config.get("wallet", "balance")))  # Default value in config
+            db_session.add(db_user)
             db_session.commit()
-            return redirect(url_for("user", username=username))
 
-    elif request.method == "GET":
+            response = make_response(redirect(url_for("user", username=username)))
+            response.set_cookie(AUTH_KEY, AuthTokenContainer.add_token(db_user.user_id), httponly=True, secure=True, samesite='Lax')
+            return response
+
+    if request.method == "GET":
         return render_template("index.html", form=request.form)
-
     return render_template("index.html")
 
 
 @app.route("/user/<username>")
 def user(username: str):
     db_user: User = db_session.query(User).filter(User.user_id == username).first()
+    token = request.cookies.get(AUTH_KEY, None)
+    if not AuthTokenContainer.is_user_auth(db_user.user_id, token):
+        print("Not authorized!")
+        return redirect(url_for("index"))
+
     wallet = WalletFactory.create_wallet(_config.get("wallet", "type"), db_user)
     return jsonify({"username": username, "balance": wallet.balance})
 
