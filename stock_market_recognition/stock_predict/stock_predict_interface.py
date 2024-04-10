@@ -9,18 +9,27 @@ class StockPredictInterface(ABC):
         """
 
         :param data: data from stock receiver
+        :param name: name of the stock to save the data
         """
         self.thicker_info, self.historical_data = data
         self.scaled_data = None
         self.prediction_days = prediction_days
+        self.name = self.thicker_info["symbol"].lower()
 
     @abstractmethod
-    def predict(self) -> np.array:
+    def predict(self, last_days_close_values: np.array) -> np.array:
         """
         This function will predict if the stock market is ready to buy
 
-        :param data: data frame with Close, Volume, Dividends, Stock Splits, Country
+        :param last_days_close_values: last days close values
 
         :return: tomorrow price prediction
+        """
+        pass
+
+    @abstractmethod
+    def fit(self):
+        """
+        This function will fit the data to the model
         """
         pass

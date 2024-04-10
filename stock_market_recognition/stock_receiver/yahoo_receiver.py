@@ -13,7 +13,7 @@ class YahooReceiver(StockReceiverInterface):
         super().__init__()
         self.parameters = self.DEFAULT_PARAMETERS  # TODO in future
 
-    def receive_data(self, stock_ticker: str, period="1mo", interval="1d", start=None, end=None) -> tuple[dict, pd.DataFrame]:
+    def receive_data(self, stock_ticker: str, period="max", interval="1d", start=None, end=None) -> tuple[dict, pd.DataFrame]:
         """
         This method is returning data from the stock
 
