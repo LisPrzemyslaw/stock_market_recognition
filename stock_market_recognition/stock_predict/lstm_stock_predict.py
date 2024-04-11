@@ -3,11 +3,11 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.layers import LSTM, Dense, Dropout
 from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Dense, LSTM, Dropout
 
 from stock_market_recognition.stock_predict.stock_predict_interface import StockPredictInterface
-from sklearn.preprocessing import MinMaxScaler
 
 
 class LstmStockPredict(StockPredictInterface):
