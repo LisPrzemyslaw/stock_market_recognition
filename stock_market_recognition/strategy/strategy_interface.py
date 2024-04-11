@@ -9,9 +9,8 @@ class StrategyInterface(ABC):
     def __init__(self):
         pass
 
-    def predict(self):
+    def predict(self) -> None:
         """
         This function will predict if the stock market is ready to buy
-        :return:
         """
         pass

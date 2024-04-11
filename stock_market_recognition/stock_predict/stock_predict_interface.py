@@ -28,7 +28,7 @@ class StockPredictInterface(ABC):
         pass
 
     @abstractmethod
-    def fit(self):
+    def fit(self) -> None:
         """
         This function will fit the data to the model
         """

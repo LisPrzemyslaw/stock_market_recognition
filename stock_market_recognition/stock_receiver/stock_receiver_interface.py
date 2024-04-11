@@ -10,9 +10,11 @@ class StockReceiverInterface(ABC):
     @abstractmethod
     def receive_data(self, stock_ticker: str, *args, **kwargs) -> tuple[dict, pd.DataFrame]:
         """
-        This method is returning data from the stock
+        This method is returning data from the stock.
 
         :param stock_ticker: name of stock ticker to receive
+        :param args: additional arguments
+        :param kwargs: additional key arguments
 
         :return: data frame with Close, Volume, Dividends, Stock Splits, Country
         """

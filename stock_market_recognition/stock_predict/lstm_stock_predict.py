@@ -44,15 +44,13 @@ class LstmStockPredict(StockPredictInterface):
         prediction = self.scaler.inverse_transform(prediction)
         return prediction[-1][0]
 
-    def __scale_data(self):
+    def __scale_data(self) -> None:
         """
         This function will scale the data to be between 0 and 1
-
-        :return: scaled data
         """
         self.scaled_data = self.scaler.fit_transform(self.historical_data["Close"].values.reshape(-1, 1))
 
-    def __prepare_train_data(self):
+    def __prepare_train_data(self) -> None:
         """
         This function will prepare the data to be trained
         """
@@ -68,7 +66,7 @@ class LstmStockPredict(StockPredictInterface):
         self.x_train, self.y_train = np.array(x_train), np.array(y_train)
         self.x_train = np.reshape(self.x_train, (self.x_train.shape[0], self.x_train.shape[1], 1))
 
-    def __create_model(self):
+    def __create_model(self) -> None:
         """
         This function will create the model for the neural network
         """
@@ -83,7 +81,7 @@ class LstmStockPredict(StockPredictInterface):
 
         self.model.compile(optimizer="adam", loss="mean_squared_error")
 
-    def fit(self):
+    def fit(self) -> None:
         """
         This function will fit the data to the model
         """
