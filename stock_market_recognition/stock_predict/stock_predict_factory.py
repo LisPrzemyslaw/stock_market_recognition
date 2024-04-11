@@ -1,11 +1,13 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
 
 from stock_market_recognition.stock_predict.lstm_stock_predict import LstmStockPredict
 
 if TYPE_CHECKING:
-    from stock_market_recognition.stock_predict.stock_predict_interface import StockPredictInterface
     import pandas as pd
+
+    from stock_market_recognition.stock_predict.stock_predict_interface import StockPredictInterface
 
 
 class StockPredictFactory:

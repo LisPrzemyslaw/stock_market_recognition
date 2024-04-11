@@ -1,5 +1,5 @@
 import secrets
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 
 
 class AuthToken:
@@ -13,11 +13,7 @@ class AuthToken:
 
     @property
     def auth_token(self) -> str | None:
-        """
-        This function is used to get auth token
-
-        :return: auth token
-        """
+        """This function is used to get auth token"""
         if self.__token_creation_time is None:
             self.__auth_token = None  # To be sure that both are set at the same time
             return None
@@ -68,6 +64,11 @@ class AuthTokenContainer:
     def is_user_auth(user_id: str, token: str) -> bool:
         """
         Check if user has token
+
+        :param user_id: user id
+        :param token: auth token
+
+        :return: boolean if user is authenticated
         """
         try:
             auth_token = AuthTokenContainer.__AUTH_TOKENS[user_id]

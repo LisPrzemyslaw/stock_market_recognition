@@ -1,14 +1,13 @@
-"""
-There will be flask api for this app
-"""
+"""There will be flask api for this app"""
 import os
 import configparser
 
-from flask import Flask, jsonify, request, url_for, redirect, render_template, make_response
+from flask import Flask, jsonify, request, url_for, redirect, make_response, render_template
 
-from stock_market_recognition.database.auth_token import AuthTokenContainer
 from stock_market_recognition.database.database import User, db_session
 from stock_market_recognition.wallet.wallet_factory import WalletFactory
+from stock_market_recognition.database.auth_token import AuthTokenContainer
+
 _config = configparser.ConfigParser()
 _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))
 
@@ -49,9 +48,12 @@ def index():
             response.set_cookie(AUTH_KEY, AuthTokenContainer.add_token(db_user.user_id), httponly=True, secure=True, samesite='Lax')
             """
             TODO move it into documentation
-            HttpOnly - Zapobiega dostępowi do wartości cookie przez JavaScript po stronie klienta, co minimalizuje ryzyko ataków XSS (Cross-Site Scripting).
-            Secure - Wymusza przesyłanie cookie tylko przez bezpieczne połączenie (HTTPS), co chroni przed przechwyceniem tokenu przez ataki typu man-in-the-middle.
-            SameSite - Ogranicza wysyłanie cookie do żądań pochodzących z tego samego źródła, co może pomóc w ochronie przed atakami CSRF (Cross-Site Request Forgery).
+            HttpOnly - Zapobiega dostępowi do wartości cookie przez JavaScript po stronie klienta, co minimalizuje
+            ryzyko ataków XSS (Cross-Site Scripting).
+            Secure - Wymusza przesyłanie cookie tylko przez bezpieczne połączenie (HTTPS), co chroni przed
+            przechwyceniem tokenu przez ataki typu man-in-the-middle.
+            SameSite - Ogranicza wysyłanie cookie do żądań pochodzących z tego samego źródła, co może pomóc w ochronie
+            przed atakami CSRF (Cross-Site Request Forgery).
             """
             return response
 

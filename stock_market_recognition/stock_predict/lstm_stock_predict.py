@@ -3,11 +3,11 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.layers import LSTM, Dense, Dropout
 from tensorflow.keras.models import Sequential, load_model
-from tensorflow.keras.layers import Dense, LSTM, Dropout
 
 from stock_market_recognition.stock_predict.stock_predict_interface import StockPredictInterface
-from sklearn.preprocessing import MinMaxScaler
 
 
 class LstmStockPredict(StockPredictInterface):
@@ -16,6 +16,7 @@ class LstmStockPredict(StockPredictInterface):
     def __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int):
         """
         :param data: data received from stock receiver
+        :param prediction_days: number of days to predict
         """
         super().__init__(data, prediction_days)
 
@@ -44,18 +45,12 @@ class LstmStockPredict(StockPredictInterface):
         prediction = self.scaler.inverse_transform(prediction)
         return prediction[-1][0]
 
-    def __scale_data(self):
-        """
-        This function will scale the data to be between 0 and 1
-
-        :return: scaled data
-        """
+    def __scale_data(self) -> None:
+        """This function will scale the data to be between 0 and 1"""
         self.scaled_data = self.scaler.fit_transform(self.historical_data["Close"].values.reshape(-1, 1))
 
-    def __prepare_train_data(self):
-        """
-        This function will prepare the data to be trained
-        """
+    def __prepare_train_data(self) -> None:
+        """This function will prepare the data to be trained"""
         # country = self.thicker_info.get("country", None)
         # if country is None:
         #     raise ValueError("Country is not defined")
@@ -68,10 +63,8 @@ class LstmStockPredict(StockPredictInterface):
         self.x_train, self.y_train = np.array(x_train), np.array(y_train)
         self.x_train = np.reshape(self.x_train, (self.x_train.shape[0], self.x_train.shape[1], 1))
 
-    def __create_model(self):
-        """
-        This function will create the model for the neural network
-        """
+    def __create_model(self) -> None:
+        """This function will create the model for the neural network"""
         self.model = Sequential()
         self.model.add(LSTM(units=50, return_sequences=True, input_shape=(self.x_train.shape[1], 1)))
         self.model.add(Dropout(0.2))
@@ -83,10 +76,8 @@ class LstmStockPredict(StockPredictInterface):
 
         self.model.compile(optimizer="adam", loss="mean_squared_error")
 
-    def fit(self):
-        """
-        This function will fit the data to the model
-        """
+    def fit(self) -> None:
+        """This function will fit the data to the model"""
         self.__scale_data()
         self.__prepare_train_data()
         self.__create_model()

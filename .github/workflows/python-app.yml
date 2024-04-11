@@ -31,13 +31,17 @@ jobs:
         
     - name: Install dependencies
       run: |
+        poetry check
+        poetry check --lock
         poetry install
     
     - name: Static code analysis
       run: |
         # stop the build if there are Python syntax errors or undefined names
         poetry run flake8 $(git ls-files '*.py')
-        # TODO add other packages also
+        poetry run isort $(git ls-files '*.py') --check-only --diff
+        poetry run docsig $(git ls-files '*.py')
+        poetry run pydocstringformatter $(git ls-files '*.py')
 
     # TODO if tests are prepared
     # - name: Test with pytest

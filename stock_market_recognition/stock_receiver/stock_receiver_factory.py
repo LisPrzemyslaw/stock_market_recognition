@@ -1,5 +1,7 @@
 from __future__ import annotations
+
 from typing import TYPE_CHECKING
+
 from stock_market_recognition.stock_receiver.yahoo_receiver import YahooReceiver
 
 if TYPE_CHECKING:
