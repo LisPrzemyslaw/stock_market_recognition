@@ -32,7 +32,7 @@ jobs:
     - name: Install dependencies
       run: |
         poetry check
-        poetry lock --check
+        poetry check --lock
         poetry install
     
     - name: Static code analysis
