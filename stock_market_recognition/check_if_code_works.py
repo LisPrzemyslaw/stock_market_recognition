@@ -1,6 +1,4 @@
-"""
-This file is used to ONLY check if the code works
-"""
+"""This file is used to ONLY check if the code works"""
 
 import os
 import configparser

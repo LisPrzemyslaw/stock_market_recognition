@@ -13,9 +13,7 @@ class AuthToken:
 
     @property
     def auth_token(self) -> str | None:
-        """
-        This function is used to get auth token
-        """
+        """This function is used to get auth token"""
         if self.__token_creation_time is None:
             self.__auth_token = None  # To be sure that both are set at the same time
             return None

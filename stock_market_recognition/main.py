@@ -1,6 +1,4 @@
-"""
-There will be flask api for this app
-"""
+"""There will be flask api for this app"""
 import os
 import configparser
 
@@ -50,9 +48,12 @@ def index():
             response.set_cookie(AUTH_KEY, AuthTokenContainer.add_token(db_user.user_id), httponly=True, secure=True, samesite='Lax')
             """
             TODO move it into documentation
-            HttpOnly - Zapobiega dostępowi do wartości cookie przez JavaScript po stronie klienta, co minimalizuje ryzyko ataków XSS (Cross-Site Scripting).
-            Secure - Wymusza przesyłanie cookie tylko przez bezpieczne połączenie (HTTPS), co chroni przed przechwyceniem tokenu przez ataki typu man-in-the-middle.
-            SameSite - Ogranicza wysyłanie cookie do żądań pochodzących z tego samego źródła, co może pomóc w ochronie przed atakami CSRF (Cross-Site Request Forgery).
+            HttpOnly - Zapobiega dostępowi do wartości cookie przez JavaScript po stronie klienta, co minimalizuje
+            ryzyko ataków XSS (Cross-Site Scripting).
+            Secure - Wymusza przesyłanie cookie tylko przez bezpieczne połączenie (HTTPS), co chroni przed
+            przechwyceniem tokenu przez ataki typu man-in-the-middle.
+            SameSite - Ogranicza wysyłanie cookie do żądań pochodzących z tego samego źródła, co może pomóc w ochronie
+            przed atakami CSRF (Cross-Site Request Forgery).
             """
             return response
 

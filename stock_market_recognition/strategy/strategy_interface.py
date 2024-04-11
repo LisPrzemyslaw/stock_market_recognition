@@ -10,7 +10,5 @@ class StrategyInterface(ABC):
         pass
 
     def predict(self) -> None:
-        """
-        This function will predict if the stock market is ready to buy
-        """
+        """This function will predict if the stock market is ready to buy"""
         pass

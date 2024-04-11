@@ -7,9 +7,8 @@ import pandas as pd
 class StockPredictInterface(ABC):
     def __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int):
         """
-
         :param data: data from stock receiver
-        :param name: name of the stock to save the data
+        :param prediction_days: number of days to predict
         """
         self.thicker_info, self.historical_data = data
         self.scaled_data = None
@@ -29,7 +28,5 @@ class StockPredictInterface(ABC):
 
     @abstractmethod
     def fit(self) -> None:
-        """
-        This function will fit the data to the model
-        """
+        """This function will fit the data to the model"""
         pass
