@@ -35,7 +35,7 @@ class LstmStockPredict(StockPredictInterface):
         """
         try:
             self.model = load_model(self.model_path)
-        except FileNotFoundError:
+        except IOError:  # FileNotFoundError from load_model
             print(f"{os.path.exists(self.model_path)=}")
             self.fit()
 

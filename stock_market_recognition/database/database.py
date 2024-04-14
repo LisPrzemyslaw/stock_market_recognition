@@ -14,13 +14,13 @@ class Stock(_Base):
     stock_name = Column("stock_name", String)
     stock_amount = Column("stock_amount", Float)
 
-    def __init__(self, wallet_id: str, stock_name: str, stock_amount: float):
-        self.wallet_id = wallet_id
+    def __init__(self, user_id: str, stock_name: str, stock_amount: float):
+        self.user_id = user_id
         self.stock_name = stock_name
         self.stock_amount = stock_amount
 
     def __repr__(self):
-        return f"<Stock {self.stock_id}> ({self.stock_name}: {self.stock_amount})"
+        return f"<Stock {self.user_id}> ({self.stock_name}: {self.stock_amount})"
 
 
 class User(_Base):

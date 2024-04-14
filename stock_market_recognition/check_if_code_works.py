@@ -18,7 +18,7 @@ dotenv.load_dotenv(os.path.join(os.getcwd(), "configuration", ".env"))
 
 """Constants"""
 PREDICTION_DAYS = 7
-STOCK_TICKERS = ("msft",)
+STOCK_TICKERS = ("MSFT",)
 
 """Constants but variables :)"""
 STOCK_PREDICTORS = {}

@@ -7,7 +7,10 @@ if TYPE_CHECKING:
 
 
 class StockReceiverFactory:
+    __STOCK_RECEIVER = None
+
     _ALL_STOCK_PREDICT = {"YAHOO": YahooReceiver}
+    __DEFAULT_STOCK_RECEIVER = "YAHOO"
 
     @staticmethod
     def create_stock_receiver(receiver_name: str) -> StockReceiverInterface:
@@ -18,4 +21,16 @@ class StockReceiverFactory:
 
         :return: stock receive class
         """
-        return StockReceiverFactory._ALL_STOCK_PREDICT[receiver_name.upper()]()
+        StockReceiverFactory.__STOCK_RECEIVER = StockReceiverFactory._ALL_STOCK_PREDICT[receiver_name.upper()]()
+        return StockReceiverFactory.__STOCK_RECEIVER
+
+    @staticmethod
+    def get_stock_receiver() -> StockReceiverInterface:
+        """
+        This function will return stock receiver
+
+        :return: stock receiver
+        """
+        if not StockReceiverFactory.__STOCK_RECEIVER:
+            return StockReceiverFactory.create_stock_receiver(StockReceiverFactory.__DEFAULT_STOCK_RECEIVER)
+        return StockReceiverFactory.__STOCK_RECEIVER

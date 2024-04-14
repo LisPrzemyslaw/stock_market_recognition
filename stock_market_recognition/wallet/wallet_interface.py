@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
-
+from stock_market_recognition.database.database import db_session
 if TYPE_CHECKING:
     from stock_market_recognition.database.database import User
 
@@ -18,7 +18,8 @@ class WalletInterface(ABC):
 
     @balance.setter
     def balance(self, value):
-        raise NotImplementedError("Not implemented")
+        self.db_user.balance = value
+        db_session.commit()
 
     @abstractmethod
     def buy_stock(self, stock_name: str, amount: float) -> None:

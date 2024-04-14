@@ -7,14 +7,13 @@ import pandas as pd
 class StockPredictInterface(ABC):
     def __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int):
         """
-
         :param data: data from stock receiver
-        :param name: name of the stock to save the data
+        :param prediction_days: how many days to predict
         """
         self.thicker_info, self.historical_data = data
         self.scaled_data = None
         self.prediction_days = prediction_days
-        self.name = self.thicker_info["symbol"].lower()
+        self.name = self.thicker_info["symbol"].upper()
 
     @abstractmethod
     def predict(self, last_days_close_values: np.array) -> np.array:

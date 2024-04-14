@@ -8,23 +8,41 @@
 </head>
 <body>
 <h1>Stock Market Recognition</h1>
-<h2>Demo Wallet</h2>
-<form method="post" action="/">
-    <div class="login_text">
-        <label for="username">Username:</label>
-        <input id="username" name="username" required>
+<h2>Hi, {{ username }}</h2>
+<form method="post" action="/user/{{ username }}">
+    <div class="user_data">
+        <p>balance: {{ balance }} $</p>
     </div>
-    <div class="login_text">
-        <label for="password">Password: </label>
-        <input type="password" name="password" id="password" required>
-    </div>
+    <div class="stock">
+        <select name="stocks">
+            {% for stock_ticker in stock_tickers %}
+            <option value="{{ stock_ticker }}">{{ stock_ticker }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Select" name="submit_stock_ticker"/>
 
-    <input type="submit" value="Login" name="Login"/>
-    <input type="submit" value="Register" name="Register"/>
+    </div>
+    <div class="stock_info">
+        <p>Current price: {{ current_price }} $</p>
+        <p>Predicted price: {{ predicted_price }} $</p>
+    </div>
+    <div class="recommendation">
+        <p>Recommendation: {{ recommendation }}</p>
+    </div>
+    <div class="amount">
+        <label for="amount">Amount:</label>
+        <input id="amount" name="amount" type="number" value="1.0" required>
+    </div>
+    <input type="submit" value="Buy" name="Buy"/>
+    <input type="submit" value="Sell" name="Sell"/>
 </form>
 </body>
 <footer>
     <p>Author: Przemysław Lis</p>
     <p>Email: przemyslaw_lis@outlook.com</p>
+    <p class="disclaimer">
+        Disclaimer: The stock recommendations are for academic purposes only. Do not rely on it for real money.
+        I am not responsible for any decisions made based on the information contained on this website.
+    </p>
 </footer>
 </html>
