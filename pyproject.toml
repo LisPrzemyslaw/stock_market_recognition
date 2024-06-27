@@ -33,6 +33,7 @@ pydocstringformatter = "^0.7.3"
 black = "^24.3.0"
 flake8 = "*"
 flask_swagger_ui = "*"
+pytest = "*"
 
 [tool.black]
 line-length = 180
