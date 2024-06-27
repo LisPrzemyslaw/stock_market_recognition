@@ -4,8 +4,6 @@ import configparser
 
 import dotenv
 
-from stock_market_recognition.database.database import User, db_session
-from stock_market_recognition.wallet.wallet_factory import WalletFactory
 from stock_market_recognition.stock_predict.stock_predict_factory import StockPredictFactory
 from stock_market_recognition.stock_receiver.stock_receiver_factory import StockReceiverFactory
 
