@@ -1,8 +1,8 @@
-import pytest
 import os
 import configparser
 
 import dotenv
+import pytest
 
 from stock_market_recognition.stock_predict.stock_predict_factory import StockPredictFactory
 from stock_market_recognition.stock_receiver.stock_receiver_factory import StockReceiverFactory
