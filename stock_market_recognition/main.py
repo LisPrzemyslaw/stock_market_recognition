@@ -25,14 +25,17 @@ STOCK_PREDICTORS = {}
 
 """Constants"""
 AUTH_KEY = 'auth_token'
-PREDICTION_DAYS = 7
 STOCK_TICKERS = ["MSFT", "GOOG", "SI", "DELL", "AAPL", "TSLA", "AMZN", "FB", "TWTR", "NFLX", "INTC", "AMD", "NVDA", "IBM", "ORCL",]
 current_stock_ticker = STOCK_TICKERS[0]
 current_price = ""
 predicted_price = ""
 recommendation = ""
+mse = ""
 _TICKER_INFO_INDEX = 0
 _TICKER_HISTORICAL_DATA_INDEX = 1
+
+"""Variables for program"""
+PREDICTION_DAYS = 7
 
 
 def _update_stock_tickers():
@@ -158,6 +161,10 @@ def user(username: str):
                 current_price=current_price,
                 predicted_price=predicted_price,
                 recommendation=recommendation)
+        if request.form.get("dev_mode") == "dev_mode":
+            response = make_response(redirect(url_for("fit_model")))
+            response.set_cookie(AUTH_KEY, AuthTokenContainer.add_token(db_user.user_id), httponly=True, secure=True, samesite='Lax')
+            return response
 
     if request.method == "GET":
         return render_template(
@@ -169,7 +176,45 @@ def user(username: str):
             predicted_price=predicted_price,
             recommendation=recommendation)
     return render_template(
-        "user.html", username=username, balance=wallet.balance, stock_tickers=STOCK_TICKERS, current_price=current_price, predicted_price=predicted_price, recommendation=recommendation)
+        "user.html",
+        username=username,
+        balance=wallet.balance,
+        stock_tickers=STOCK_TICKERS,
+        current_price=current_price,
+        predicted_price=predicted_price,
+        recommendation=recommendation)
+
+
+@app.route("/fit_model", methods=["POST", "GET"])
+def fit_model():
+    from stock_market_recognition.stock_predict.lstm_stock_predict import LstmStockPredict
+    global current_stock_ticker, current_price, predicted_price, mse
+    if request.method == "POST":
+        prediction_days = int(request.form["prediction_days"])
+        lstm_units = request.form["lstm_units"]
+        dropout = request.form["dropout"]
+        epoch = request.form["epoch"]
+        batch_size = request.form["batch_size"]
+        current_stock_ticker = request.form["stocks"]
+        _update_stock_tickers()
+
+        stock_receiver = StockReceiverFactory.get_stock_receiver()
+        data = stock_receiver.receive_data(current_stock_ticker, period="MAX")
+        try:
+            current_price = data[_TICKER_INFO_INDEX]["currentPrice"]
+        except KeyError:
+            current_price = data[_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-1:]  # TODO
+        # For test purpose it is hardcoded
+        stock_predictor = LstmStockPredict(data, prediction_days, lstm_units, dropout, epoch, batch_size)
+        last_days_close_value = data[_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-prediction_days:]
+        predicted_price = round(stock_predictor.predict(last_days_close_value, True), 2)
+
+    return render_template(
+        "fit_model.html",
+        stock_tickers=STOCK_TICKERS,
+        current_price=current_price,
+        predicted_price=predicted_price,
+        mse=mse)
 
 
 if __name__ == "__main__":

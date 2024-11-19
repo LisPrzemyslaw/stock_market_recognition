@@ -8,10 +8,23 @@
 </head>
 <body>
 <h1>Stock Market Recognition</h1>
-<h2>Hi, {{ username }}</h2>
-<form method="post" action="/user/{{ username }}">
-    <div class="user_data">
-        <p>balance: {{ balance }} $</p>
+<h2>Welcome to dev mode!</h2>
+<form method="post" action="/fit_model/">
+        <div class="parameters">
+        <label for="prediction_days">Prediction Days:</label>
+        <input id="prediction_days" name="prediction_days" type="number" value="10" required>
+
+        <label for="lstm_units">LSTM Units:</label>
+        <input id="lstm_units" name="lstm_units" type="number" value="50" required>
+
+        <label for="dropout">Dropout:</label>
+        <input id="dropout" name="dropout" type="number" step="0.01" value="0.2" required>
+
+        <label for="epoch">Epoch:</label>
+        <input id="epoch" name="epoch" type="number" value="25" required>
+
+        <label for="batch_size">Batch Size:</label>
+        <input id="batch_size" name="batch_size" type="number" value="32" required>
     </div>
     <div class="stock">
         <select name="stocks">
@@ -20,24 +33,17 @@
             {% endfor %}
         </select>
         <input type="submit" value="Select" name="submit_stock_ticker"/>
-
     </div>
+
+
     <div class="stock_info">
         <p>Current price: {{ current_price }} $</p>
         <p>Predicted price: {{ predicted_price }} $</p>
     </div>
-    <div class="recommendation">
-        <p>Recommendation: {{ recommendation }}</p>
+    <div class="mse">
+        <p>Mean Squared Error (MSE): {{ mse }}</p>
     </div>
-    <div class="amount">
-        <label for="amount">Amount:</label>
-        <input id="amount" name="amount" type="number" value="1.0" required>
-    </div>
-    <input type="submit" value="Buy" name="Buy"/>
-    <input type="submit" value="Sell" name="Sell"/>
-
-    <input type="submit" value="dev_mode" name="dev_mode"/>
-
+    <input type="submit" value="Update Parameters" name="update_parameters"/>
 </form>
 </body>
 <footer>

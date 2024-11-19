@@ -8,12 +8,21 @@ from tensorflow.keras.layers import Dense, LSTM, Dropout
 
 from stock_market_recognition.stock_predict.stock_predict_interface import StockPredictInterface
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import mean_squared_error
 
 
 class LstmStockPredict(StockPredictInterface):
     """This class will predict the stock market using LSTM neural network model. Prediction will base on Close price"""
 
-    def __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int):
+    def __init__(
+            self,
+            data: tuple[dict, pd.DataFrame],
+            prediction_days: int,
+            lstm_units=50,
+            dropout=0.2,
+            epoch=25,
+            batch_size=32
+    ):
         """
         :param data: data received from stock receiver
         """
@@ -25,23 +34,38 @@ class LstmStockPredict(StockPredictInterface):
         self.model = None
         self.scaler = MinMaxScaler(feature_range=(0, 1))
 
-    def predict(self, last_days_close_values: np.array) -> np.array:
+        """Model parameters"""
+        self.lstm_units = lstm_units
+        self.dropout = dropout
+        self.epoch = epoch
+        self.batch_size = batch_size
+        # TODO add more lstm layers and analyze the results
+
+        """mse"""
+        self.mse: float | None = None
+
+    def predict(self, last_days_close_values: np.array, fit_model=False) -> np.array:
         """
         This function will predict if the stock market is ready to buy
 
         :param last_days_close_values: last days close values. Data from stock receiver without scaling and reshaping. It is done inside this method.
+        :param fit_model: if True the model will be fitted
 
         :return: last days predictions
         """
-        try:
-            self.model = load_model(self.model_path)
-        except IOError:  # FileNotFoundError from load_model
-            print(f"{os.path.exists(self.model_path)=}")
+        if fit_model:
             self.fit()
+        else:  # Try to load model from file, if not exists fit the model
+            try:
+                self.model = load_model(self.model_path)
+            except IOError:  # FileNotFoundError from load_model
+                print(f"{os.path.exists(self.model_path)=}")
+                self.fit()
 
         scaled_last_days_close_values = self.scaler.fit_transform(last_days_close_values.reshape(-1, 1))
         prediction = self.model.predict(scaled_last_days_close_values)
         prediction = self.scaler.inverse_transform(prediction)
+        self.mse = mean_squared_error(last_days_close_values, prediction[-1])
         return prediction[-1][0]
 
     def __scale_data(self):
@@ -73,12 +97,12 @@ class LstmStockPredict(StockPredictInterface):
         This function will create the model for the neural network
         """
         self.model = Sequential()
-        self.model.add(LSTM(units=50, return_sequences=True, input_shape=(self.x_train.shape[1], 1)))
-        self.model.add(Dropout(0.2))
-        self.model.add(LSTM(units=50, return_sequences=True))
-        self.model.add(Dropout(0.2))
-        self.model.add(LSTM(units=50))
-        self.model.add(Dropout(0.2))
+        self.model.add(LSTM(units=self.lstm_units, return_sequences=True, input_shape=(self.x_train.shape[1], 1)))
+        self.model.add(Dropout(self.dropout))
+        self.model.add(LSTM(units=self.lstm_units, return_sequences=True))
+        self.model.add(Dropout(self.dropout))
+        self.model.add(LSTM(units=self.lstm_units))
+        self.model.add(Dropout(self.dropout))
         self.model.add(Dense(units=1))
 
         self.model.compile(optimizer="adam", loss="mean_squared_error")
@@ -91,7 +115,7 @@ class LstmStockPredict(StockPredictInterface):
         self.__prepare_train_data()
         self.__create_model()
 
-        self.model.fit(self.x_train, self.y_train, epochs=25, batch_size=32)
+        self.model.fit(self.x_train, self.y_train, epochs=self.epoch, batch_size=self.batch_size)
         self.model.save(self.model_path)
         self.model.summary()
         print(self.model.summary())
