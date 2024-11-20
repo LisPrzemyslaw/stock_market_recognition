@@ -6,6 +6,16 @@ body {
     margin-bottom: 5px;
 
 }
+.user_data {
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+.amount {
+    margin-bottom: 5px;
+}
+input[name="dev_mode"] {
+    margin-bottom: 20px; /* Adjust the value as needed */
+}
 footer {
     background-color: #e1e1e1;
     padding: 10px;
@@ -13,4 +23,7 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
+}
+.disclaimer {
+    font-size: 80%;
 }
