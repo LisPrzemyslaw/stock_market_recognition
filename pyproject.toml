@@ -68,9 +68,7 @@ style = 'pep257'
 strip-whitespaces = true
 linewrap-full-docstring = true
 final-period = false
-
-[tool.pydocstringformatter.ignore]
-patterns = ["tests/*"]
+exclude = ["tests/*"]
 
 [tool.docsig]
 check-dunders = true
@@ -78,9 +76,8 @@ check-overridden = false
 check-protected = true
 summary = true
 disable = ["E113"]
+excludes = ["tests/*"]
 
-[tool.docsig.ignore]
-patterns = ["tests/*"]
 
 [build-system]
 requires = ["poetry_core>=1.0.0"]
