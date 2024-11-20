@@ -2,7 +2,7 @@
 import os
 import configparser
 
-from flask import Flask, jsonify, request, url_for, redirect, make_response, render_template
+from flask import Flask, request, url_for, redirect, make_response, render_template
 
 from stock_market_recognition.database.database import User, db_session
 from stock_market_recognition.stock_receiver.stock_receiver_factory import StockReceiverFactory
