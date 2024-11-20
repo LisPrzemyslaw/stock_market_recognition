@@ -9,7 +9,7 @@
 <body>
 <h1>Stock Market Recognition</h1>
 <h2>Welcome to dev mode!</h2>
-<form method="post" action="/fit_model/">
+<form method="post" action="/fit_model">
         <div class="parameters">
         <label for="prediction_days">Prediction Days:</label>
         <input id="prediction_days" name="prediction_days" type="number" value="10" required>
@@ -32,7 +32,6 @@
             <option value="{{ stock_ticker }}">{{ stock_ticker }}</option>
             {% endfor %}
         </select>
-        <input type="submit" value="Select" name="submit_stock_ticker"/>
     </div>
 
 

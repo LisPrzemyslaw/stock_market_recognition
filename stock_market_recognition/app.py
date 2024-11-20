@@ -192,24 +192,25 @@ def fit_model():
     from stock_market_recognition.stock_predict.lstm_stock_predict import LstmStockPredict
     global current_stock_ticker, current_price, predicted_price, mse
     if request.method == "POST":
-        prediction_days = int(request.form["prediction_days"])
-        lstm_units = request.form["lstm_units"]
-        dropout = request.form["dropout"]
-        epoch = request.form["epoch"]
-        batch_size = request.form["batch_size"]
-        current_stock_ticker = request.form["stocks"]
-        _update_stock_tickers()
+        if request.form.get("update_parameters") == "Update Parameters":
+            prediction_days = int(request.form["prediction_days"])
+            lstm_units = request.form["lstm_units"]
+            dropout = request.form["dropout"]
+            epoch = request.form["epoch"]
+            batch_size = request.form["batch_size"]
+            current_stock_ticker = request.form["stocks"]
+            _update_stock_tickers()
 
-        stock_receiver = StockReceiverFactory.get_stock_receiver()
-        data = stock_receiver.receive_data(current_stock_ticker, period="MAX")
-        try:
-            current_price = data[_TICKER_INFO_INDEX]["currentPrice"]
-        except KeyError:
-            current_price = data[_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-1:]  # TODO
-        # For test purpose it is hardcoded
-        stock_predictor = LstmStockPredict(data, prediction_days, lstm_units, dropout, epoch, batch_size)
-        last_days_close_value = data[_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-prediction_days:]
-        predicted_price = round(stock_predictor.predict(last_days_close_value, True), 2)
+            stock_receiver = StockReceiverFactory.get_stock_receiver()
+            data = stock_receiver.receive_data(current_stock_ticker, period="MAX")
+            try:
+                current_price = data[_TICKER_INFO_INDEX]["currentPrice"]
+            except KeyError:
+                current_price = data[_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-1:]  # TODO
+            # For test purpose it is hardcoded
+            stock_predictor = LstmStockPredict(data, prediction_days, lstm_units, dropout, epoch, batch_size)
+            last_days_close_value = data[_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-prediction_days:]
+            predicted_price = round(stock_predictor.predict(last_days_close_value, True), 2)
 
     return render_template(
         "fit_model.html",
