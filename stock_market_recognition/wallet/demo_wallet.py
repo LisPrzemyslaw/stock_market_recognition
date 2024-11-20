@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from stock_market_recognition.database.database import Stock, db_session
 from stock_market_recognition.wallet.wallet_interface import WalletInterface
-from stock_market_recognition.database.database import db_session, Stock
 from stock_market_recognition.stock_receiver.stock_receiver_factory import StockReceiverFactory
+
 if TYPE_CHECKING:
     from stock_market_recognition.database.database import User
 

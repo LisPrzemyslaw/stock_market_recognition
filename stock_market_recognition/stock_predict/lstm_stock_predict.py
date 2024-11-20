@@ -3,10 +3,10 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.layers import LSTM, Dense, Dropout
-from tensorflow.keras.models import Sequential, load_model, Model
+from tensorflow.keras.models import Model, Sequential, load_model
 
 from stock_market_recognition.stock_predict.stock_predict_interface import StockPredictInterface
 

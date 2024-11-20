@@ -5,10 +5,11 @@ import configparser
 from flask import Flask, request, url_for, redirect, make_response, render_template
 
 from stock_market_recognition.database.database import User, db_session
-from stock_market_recognition.stock_receiver.stock_receiver_factory import StockReceiverFactory
-from stock_market_recognition.stock_predict.stock_predict_factory import StockPredictFactory
 from stock_market_recognition.wallet.wallet_factory import WalletFactory
 from stock_market_recognition.database.auth_token import AuthTokenContainer
+from stock_market_recognition.stock_receiver.stock_receiver_factory import StockReceiverFactory
+from stock_market_recognition.stock_predict.stock_predict_factory import StockPredictFactory
+
 
 _config = configparser.ConfigParser()
 _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))

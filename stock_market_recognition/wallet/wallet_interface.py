@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 from abc import ABC, abstractmethod
+
 from stock_market_recognition.database.database import db_session
+
 if TYPE_CHECKING:
     from stock_market_recognition.database.database import User
 
