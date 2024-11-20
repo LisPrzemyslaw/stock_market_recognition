@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 from tensorflow.keras.layers import LSTM, Dense, Dropout
-from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.models import Sequential, load_model, Model
 
 from stock_market_recognition.stock_predict.stock_predict_interface import StockPredictInterface
 
@@ -32,7 +32,7 @@ class LstmStockPredict(StockPredictInterface):
         self.scaled_data: Optional[pd.DataFrame] = None
         self.x_train: Optional[np.array] = None
         self.y_train: Optional[np.array] = None
-        self.model = None
+        self.model: Optional[Model] = None
         self.scaler = MinMaxScaler(feature_range=(0, 1))
 
         """Model parameters"""
