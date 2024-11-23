@@ -18,10 +18,10 @@ class LstmStockPredict(StockPredictInterface):
             self,
             data: tuple[dict, pd.DataFrame],
             prediction_days: int,
-            lstm_units=50,
-            dropout=0.2,
-            epoch=25,
-            batch_size=32
+            lstm_units: int = 50,
+            dropout: float = 0.2,
+            epoch: int = 25,
+            batch_size: int = 32
     ):
         """
         :param data: data received from stock receiver
@@ -66,7 +66,8 @@ class LstmStockPredict(StockPredictInterface):
         scaled_last_days_close_values = self.scaler.fit_transform(last_days_close_values.reshape(-1, 1))
         prediction = self.model.predict(scaled_last_days_close_values)
         prediction = self.scaler.inverse_transform(prediction)
-        self.mse = mean_squared_error(last_days_close_values, prediction[-1])
+        last_days_close_values_reshaped = last_days_close_values.reshape(-1, 1)
+        self.mse = mean_squared_error(last_days_close_values_reshaped, prediction)
         return prediction[-1][0]
 
     def __scale_data(self) -> None:

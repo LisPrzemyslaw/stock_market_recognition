@@ -194,10 +194,10 @@ def fit_model():
     if request.method == "POST":
         if request.form.get("update_parameters") == "Update Parameters":
             prediction_days = int(request.form["prediction_days"])
-            lstm_units = request.form["lstm_units"]
-            dropout = request.form["dropout"]
-            epoch = request.form["epoch"]
-            batch_size = request.form["batch_size"]
+            lstm_units = int(request.form["lstm_units"])
+            dropout = float(request.form["dropout"].replace(",", "."))
+            epoch = int(request.form["epoch"])
+            batch_size = int(request.form["batch_size"])
             current_stock_ticker = request.form["stocks"]
             _update_stock_tickers()
 
