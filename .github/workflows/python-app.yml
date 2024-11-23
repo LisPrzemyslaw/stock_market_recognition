@@ -43,7 +43,6 @@ jobs:
         poetry run docsig $(git ls-files '*.py')
         poetry run pydocstringformatter $(git ls-files '*.py')
 
-    # TODO if tests are prepared
-    # - name: Test with pytest
-    #   run: |
-    #     pytest tests
+    - name: Test with pytest
+      run: |
+        pytest tests
