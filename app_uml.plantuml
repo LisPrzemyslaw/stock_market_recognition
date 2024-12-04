@@ -1,0 +1,134 @@
+@startuml
+
+!theme plain
+top to bottom direction
+skinparam linetype ortho
+
+class node8 as "database.auth_token.AuthToken" {
+   __token_creation_time: 
+   __auth_token: 
+   AUTH_TIME: 
+   __init__(self): 
+   auth_token(self): 
+   _create_auth_token(self): 
+   is_auth(self, auth_token: str): 
+}
+class node11 as "database.auth_token.AuthTokenContainer" {
+   __AUTH_TOKENS: 
+   add_token(user_id: str): 
+   is_user_auth(user_id: str, token: str): 
+}
+class node2 as "database.database.Stock" {
+   stock_name: 
+   stock_amount: 
+   user_id: 
+   __tablename__: 
+   user_id: 
+   stock_name: 
+   stock_amount: 
+   __init__(self, user_id: str, stock_name: str, stock_amount: float): 
+   __repr__(self): 
+}
+class node0 as "database.database.User" {
+   password: 
+   balance: 
+   user_id: 
+   __tablename__: 
+   user_id: 
+   password: 
+   balance: 
+   __init__(self, user_id: str, password: str, balance: float): 
+   __encode_password(password: str): 
+   verify_password(self, password: str): 
+   __repr__(self): 
+}
+class node9 as "stock_predict.lstm_stock_predict.LstmStockPredict" {
+   x_train: 
+   batch_size: 
+   y_train: 
+   scaler: 
+   dropout: 
+   lstm_units: 
+   model: 
+   epoch: 
+   scaled_data: 
+   mse: 
+   __init__(
+            self,
+            data: tuple[dict, pd.DataFrame],
+            prediction_days: int,
+            lstm_units: int = 50,
+            dropout: float = 0.2,
+            epoch: int = 25,
+            batch_size: int = 32
+    ): 
+   predict(self, last_days_close_values: np.array, fit_model=False): 
+   __scale_data(self): 
+   __prepare_train_data(self): 
+   __create_model(self): 
+   fit(self): 
+   model_path(self): 
+}
+class node12 as "stock_predict.stock_predict_factory.StockPredictFactory" {
+   __STOCK_RECEIVER: 
+   _ALL_STOCK_PREDICT: 
+   __DEFAULT_STOCK_PREDICT: 
+   create_stock_predict(predict_name: str, data: tuple[dict, pd.DataFrame], prediction_days: int): 
+   get_stock_predict(): 
+}
+class node10 as "stock_predict.stock_predict_interface.StockPredictInterface" {
+   historical_data: 
+   thicker_info: 
+   name: 
+   prediction_days: 
+   scaled_data: 
+   __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int): 
+   predict(self, last_days_close_values: np.array): 
+   fit(self): 
+}
+class node7 as "stock_receiver.stock_receiver_factory.StockReceiverFactory" {
+   __STOCK_RECEIVER: 
+   _ALL_STOCK_PREDICT: 
+   __DEFAULT_STOCK_RECEIVER: 
+   create_stock_receiver(receiver_name: str): 
+   get_stock_receiver(): 
+}
+class node3 as "stock_receiver.stock_receiver_interface.StockReceiverInterface" {
+   __init__(self): 
+   receive_data(self, stock_ticker: str, *args, **kwargs): 
+}
+class node1 as "stock_receiver.yahoo_receiver.YahooReceiver" {
+   parameters: 
+   DEFAULT_PARAMETERS: 
+   __init__(self): 
+   receive_data(self, stock_ticker: str, period="max", interval="1d", start=None, end=None): 
+}
+class node5 as "wallet.demo_wallet.DemoWallet" {
+   stock_receiver: 
+   balance: 
+   __TICKER_INFO_INDEX: 
+   __init__(self, db_user: User): 
+   buy_stock(self, stock_name: str, amount: float): 
+   sell_stock(self, stock_name: str, amount: float): 
+   get_all_stocks(self): 
+}
+class node4 as "wallet.wallet_factory.WalletFactory" {
+   DEMO_WALLET: 
+   _ALL_WALLETS: 
+   create_wallet(wallet_name: str, db_user: User): 
+}
+class node6 as "wallet.wallet_interface.WalletInterface" {
+   db_user: 
+   currency: 
+   __init__(self, db_user: User): 
+   balance(self): 
+   balance(self, value): 
+   buy_stock(self, stock_name: str, amount: float): 
+   sell_stock(self, stock_name: str, amount: float): 
+   get_all_stocks(self): 
+}
+
+node9   ^-[#595959,plain]-  node10 
+node1   ^-[#595959,plain]-  node3  
+node5   ^-[#595959,plain]-  node6  
+@enduml
