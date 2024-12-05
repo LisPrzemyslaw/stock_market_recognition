@@ -5,130 +5,116 @@ top to bottom direction
 skinparam linetype ortho
 
 class node8 as "database.auth_token.AuthToken" {
-   __token_creation_time: 
-   __auth_token: 
-   AUTH_TIME: 
-   __init__(self): 
-   auth_token(self): 
-   _create_auth_token(self): 
-   is_auth(self, auth_token: str): 
+   __token_creation_time: datetime
+   __auth_token: str
+   AUTH_TIME: int
+   __init__(self):
+   auth_token(self): str
+   _create_auth_token(self): str
+   is_auth(self, auth_token: str): bool
 }
 class node11 as "database.auth_token.AuthTokenContainer" {
-   __AUTH_TOKENS: 
-   add_token(user_id: str): 
-   is_user_auth(user_id: str, token: str): 
+   __AUTH_TOKENS: dict[str, AuthToken]
+   add_token(user_id: str): str
+   is_user_auth(user_id: str, token: str): bool
 }
 class node2 as "database.database.Stock" {
-   stock_name: 
-   stock_amount: 
-   user_id: 
-   __tablename__: 
-   user_id: 
-   stock_name: 
-   stock_amount: 
-   __init__(self, user_id: str, stock_name: str, stock_amount: float): 
-   __repr__(self): 
+   user_id: str
+   stock_name: str
+   stock_amount: float
+   __init__(self, user_id: str, stock_name: str, stock_amount: float)
+   __repr__(self): str
 }
 class node0 as "database.database.User" {
-   password: 
-   balance: 
-   user_id: 
-   __tablename__: 
-   user_id: 
-   password: 
-   balance: 
-   __init__(self, user_id: str, password: str, balance: float): 
-   __encode_password(password: str): 
-   verify_password(self, password: str): 
-   __repr__(self): 
+   user_id: str
+   password: str
+   balance: float
+   __init__(self, user_id: str, password: str, balance: float)
+   __encode_password(password: str): str
+   verify_password(self, password: str): bool
+   __repr__(self): str
 }
 class node9 as "stock_predict.lstm_stock_predict.LstmStockPredict" {
-   x_train: 
-   batch_size: 
-   y_train: 
-   scaler: 
-   dropout: 
-   lstm_units: 
-   model: 
-   epoch: 
-   scaled_data: 
-   mse: 
-   __init__(
-            self,
-            data: tuple[dict, pd.DataFrame],
-            prediction_days: int,
-            lstm_units: int = 50,
-            dropout: float = 0.2,
-            epoch: int = 25,
-            batch_size: int = 32
-    ): 
-   predict(self, last_days_close_values: np.array, fit_model=False): 
-   __scale_data(self): 
-   __prepare_train_data(self): 
-   __create_model(self): 
-   fit(self): 
-   model_path(self): 
+   scaled_data: pd.DataFrame
+   x_train: np.array
+   y_train: np.array
+   model: Model
+   scaler: MinMaxScaler
+   lstm_units: int
+   dropout: float
+   epoch: int
+   batch_size: int
+   mse: float
+   model_path: str
+   __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int, lstm_units: int = 50, dropout: float = 0.2, epoch: int = 25, batch_size: int = 32)
+   predict(self, last_days_close_values: np.array, fit_model=False): np.array
+   __scale_data(self)
+   __prepare_train_data(self)
+   __create_model(self)
+   fit(self)
 }
 class node12 as "stock_predict.stock_predict_factory.StockPredictFactory" {
-   __STOCK_RECEIVER: 
-   _ALL_STOCK_PREDICT: 
-   __DEFAULT_STOCK_PREDICT: 
-   create_stock_predict(predict_name: str, data: tuple[dict, pd.DataFrame], prediction_days: int): 
-   get_stock_predict(): 
+   __STOCK_RECEIVER: StockPredictInterface
+   _ALL_STOCK_PREDICT: dict
+   __DEFAULT_STOCK_PREDICT: str
+   create_stock_predict(predict_name: str, data: tuple[dict, pd.DataFrame], prediction_days: int): StockPredictInterface
+   get_stock_predict(): StockPredictInterface
 }
-class node10 as "stock_predict.stock_predict_interface.StockPredictInterface" {
-   historical_data: 
-   thicker_info: 
-   name: 
-   prediction_days: 
-   scaled_data: 
-   __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int): 
-   predict(self, last_days_close_values: np.array): 
-   fit(self): 
+abstract class node10 as "stock_predict.stock_predict_interface.StockPredictInterface" {
+   historical_data: pd.DataFrame
+   scaled_data
+   thicker_info: dict
+   name: str
+   prediction_days: int
+   __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int):
+   predict(self, last_days_close_values: np.array)
+   fit(self)
 }
 class node7 as "stock_receiver.stock_receiver_factory.StockReceiverFactory" {
-   __STOCK_RECEIVER: 
-   _ALL_STOCK_PREDICT: 
-   __DEFAULT_STOCK_RECEIVER: 
-   create_stock_receiver(receiver_name: str): 
-   get_stock_receiver(): 
+   __STOCK_RECEIVER: StockReceiverInterface
+   _ALL_STOCK_PREDICT: dict
+   __DEFAULT_STOCK_RECEIVER: str
+   create_stock_receiver(receiver_name: str): StockReceiverInterface
+   get_stock_receiver(): StockReceiverInterface
 }
-class node3 as "stock_receiver.stock_receiver_interface.StockReceiverInterface" {
-   __init__(self): 
-   receive_data(self, stock_ticker: str, *args, **kwargs): 
+abstract class node3 as "stock_receiver.stock_receiver_interface.StockReceiverInterface" {
+   __init__(self)
+   receive_data(self, stock_ticker: str, *args, **kwargs): tuple[dict, pd.DataFrame]
 }
 class node1 as "stock_receiver.yahoo_receiver.YahooReceiver" {
-   parameters: 
-   DEFAULT_PARAMETERS: 
-   __init__(self): 
-   receive_data(self, stock_ticker: str, period="max", interval="1d", start=None, end=None): 
+   parameters: dict
+   DEFAULT_PARAMETERS: dict
+   __init__(self)
+   receive_data(self, stock_ticker: str, period="max", interval="1d", start=None, end=None): tuple[dict, pd.DataFrame]
 }
 class node5 as "wallet.demo_wallet.DemoWallet" {
-   stock_receiver: 
-   balance: 
-   __TICKER_INFO_INDEX: 
-   __init__(self, db_user: User): 
-   buy_stock(self, stock_name: str, amount: float): 
-   sell_stock(self, stock_name: str, amount: float): 
-   get_all_stocks(self): 
+   stock_receiver: StockReceiverInterface
+   __TICKER_INFO_INDEX: int
+   __init__(self, db_user: User)
+   buy_stock(self, stock_name: str, amount: float)
+   sell_stock(self, stock_name: str, amount: float)
+   get_all_stocks(self): dict[str, float]
 }
 class node4 as "wallet.wallet_factory.WalletFactory" {
    DEMO_WALLET: 
    _ALL_WALLETS: 
    create_wallet(wallet_name: str, db_user: User): 
 }
-class node6 as "wallet.wallet_interface.WalletInterface" {
-   db_user: 
-   currency: 
-   __init__(self, db_user: User): 
-   balance(self): 
-   balance(self, value): 
-   buy_stock(self, stock_name: str, amount: float): 
-   sell_stock(self, stock_name: str, amount: float): 
-   get_all_stocks(self): 
+abstract class node6 as "wallet.wallet_interface.WalletInterface" {
+   db_user: User
+   currency: str
+   balance: float
+   __init__(self, db_user: User)
+   buy_stock(self, stock_name: str, amount: float)
+   sell_stock(self, stock_name: str, amount: float)
+   get_all_stocks(self): dict[str, float]
 }
 
-node9   ^-[#595959,plain]-  node10 
-node1   ^-[#595959,plain]-  node3  
-node5   ^-[#595959,plain]-  node6  
+node9 <|.. node10
+node10 <-- node12
+node1 <|.. node3
+node3 <-- node7
+node5 <|.. node6
+node6 <-- node4
+node8 o-- node11
 @enduml
