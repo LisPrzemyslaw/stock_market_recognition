@@ -26,6 +26,10 @@ class LstmStockPredict(StockPredictInterface):
         """
         :param data: data received from stock receiver
         :param prediction_days: number of days to predict
+        :param lstm_units: number of units in LSTM layer
+        :param dropout: dropout value
+        :param epoch: number of epochs
+        :param batch_size: batch size
         """
         super().__init__(data, prediction_days)
 
