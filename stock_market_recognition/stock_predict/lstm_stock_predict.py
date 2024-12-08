@@ -1,3 +1,4 @@
+import copy
 import os
 from typing import Optional
 
@@ -48,6 +49,7 @@ class LstmStockPredict(StockPredictInterface):
 
         """mse"""
         self.mse: float | None = None
+        self.mse_scaled: float | None = None
 
     def predict(self, last_days_close_values: np.array, fit_model=False) -> np.array:
         """
@@ -69,9 +71,11 @@ class LstmStockPredict(StockPredictInterface):
 
         scaled_last_days_close_values = self.scaler.fit_transform(last_days_close_values.reshape(-1, 1))
         prediction = self.model.predict(scaled_last_days_close_values)
+        prediction_scaled = copy.deepcopy(prediction)
         prediction = self.scaler.inverse_transform(prediction)
         last_days_close_values_reshaped = last_days_close_values.reshape(-1, 1)
         self.mse = mean_squared_error(last_days_close_values_reshaped, prediction)
+        self.mse_scaled = mean_squared_error(scaled_last_days_close_values, prediction_scaled)
         return prediction[-1][0]
 
     def __scale_data(self) -> None:

@@ -30,6 +30,8 @@ current_price = ""
 predicted_price = ""
 recommendation = ""
 mse = ""
+mse_scaled = ""
+rmse = ""
 _TICKER_INFO_INDEX = 0
 _TICKER_HISTORICAL_DATA_INDEX = 1
 
@@ -190,7 +192,7 @@ def user(username: str):
 @app.route("/fit_model", methods=["POST", "GET"])
 def fit_model():
     from stock_market_recognition.stock_predict.lstm_stock_predict import LstmStockPredict
-    global current_stock_ticker, current_price, predicted_price, mse
+    global current_stock_ticker, current_price, predicted_price, mse, mse_scaled, rmse
     if request.method == "POST":
         if request.form.get("update_parameters") == "Update Parameters":
             prediction_days = int(request.form["prediction_days"])
@@ -211,13 +213,18 @@ def fit_model():
             stock_predictor = LstmStockPredict(data, prediction_days, lstm_units, dropout, epoch, batch_size)
             last_days_close_value = data[_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-prediction_days:]
             predicted_price = round(stock_predictor.predict(last_days_close_value, True), 2)
+            mse = round(stock_predictor.mse, 2)
+            mse_scaled = round(stock_predictor.mse_scaled, 2)
+            rmse = round(stock_predictor.mse ** 0.5, 2)
 
     return render_template(
         "fit_model.html",
         stock_tickers=STOCK_TICKERS,
         current_price=current_price,
         predicted_price=predicted_price,
-        mse=mse)
+        mse=mse,
+        mse_scaled=mse_scaled,
+        rmse=rmse)
 
 
 if __name__ == "__main__":
