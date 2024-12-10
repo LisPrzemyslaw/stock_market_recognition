@@ -1,10 +1,11 @@
 @startuml
 
 !theme plain
-top to bottom direction
+'top to bottom direction
+left to right direction
 skinparam linetype ortho
 
-class node8 as "database.auth_token.AuthToken" {
+class AuthToken as "database.AuthToken" {
    __token_creation_time: datetime
    __auth_token: str
    AUTH_TIME: int
@@ -13,28 +14,28 @@ class node8 as "database.auth_token.AuthToken" {
    _create_auth_token(self): str
    is_auth(self, auth_token: str): bool
 }
-class node11 as "database.auth_token.AuthTokenContainer" {
+class AuthTokenContainer as "database.AuthTokenContainer" {
    __AUTH_TOKENS: dict[str, AuthToken]
    add_token(user_id: str): str
    is_user_auth(user_id: str, token: str): bool
 }
-class node2 as "database.database.Stock" {
+class Stock as "database.Stock" {
    user_id: str
    stock_name: str
    stock_amount: float
-   __init__(self, user_id: str, stock_name: str, stock_amount: float)
+   __init__(self, \n\t user_id: str, \n\t stock_name: str, \n\t stock_amount: float)
    __repr__(self): str
 }
-class node0 as "database.database.User" {
+class User as "database.User" {
    user_id: str
    password: str
    balance: float
-   __init__(self, user_id: str, password: str, balance: float)
-   __encode_password(password: str): str
-   verify_password(self, password: str): bool
+   __init__(self, \n\t user_id: str, \n\t password: str, \n\t balance: float)
+   __encode_password(\n\t password: str): str
+   verify_password(self, \n\t password: str): bool
    __repr__(self): str
 }
-class node9 as "stock_predict.lstm_stock_predict.LstmStockPredict" {
+class LstmStockPredict as "stock_predict.LstmStockPredict" {
    scaled_data: pd.DataFrame
    x_train: np.array
    y_train: np.array
@@ -46,48 +47,48 @@ class node9 as "stock_predict.lstm_stock_predict.LstmStockPredict" {
    batch_size: int
    mse: float
    model_path: str
-   __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int, lstm_units: int = 50, dropout: float = 0.2, epoch: int = 25, batch_size: int = 32)
-   predict(self, last_days_close_values: np.array, fit_model=False): np.array
+   __init__(self, \n\t data: tuple[dict, pd.DataFrame], \n\t prediction_days: int, \n\t lstm_units: int = 50, \n\t dropout: float = 0.2, \n\t epoch: int = 25, \n\t batch_size: int = 32)
+   predict(self, \n\t last_days_close_values: np.array, \n\t fit_model=False): np.array
    __scale_data(self)
    __prepare_train_data(self)
    __create_model(self)
    fit(self)
 }
-class node12 as "stock_predict.stock_predict_factory.StockPredictFactory" {
+class StockPredictFactory as "stock_predict.StockPredictFactory" {
    __STOCK_RECEIVER: StockPredictInterface
    _ALL_STOCK_PREDICT: dict
    __DEFAULT_STOCK_PREDICT: str
-   create_stock_predict(predict_name: str, data: tuple[dict, pd.DataFrame], prediction_days: int): StockPredictInterface
+   create_stock_predict(predict_name: str, \n\tdata: tuple[dict, pd.DataFrame], \n\tprediction_days: int): \n\tStockPredictInterface
    get_stock_predict(): StockPredictInterface
 }
-abstract class node10 as "stock_predict.stock_predict_interface.StockPredictInterface" {
+abstract class StockPredictInterface as "stock_predict.StockPredictInterface" {
    historical_data: pd.DataFrame
    scaled_data
    thicker_info: dict
    name: str
    prediction_days: int
-   __init__(self, data: tuple[dict, pd.DataFrame], prediction_days: int):
+   __init__(self, \n\t data: tuple[dict, pd.DataFrame], \n\t prediction_days: int)
    predict(self, last_days_close_values: np.array)
    fit(self)
 }
-class node7 as "stock_receiver.stock_receiver_factory.StockReceiverFactory" {
+class StockReceiverFactory as "stock_receiver.StockReceiverFactory" {
    __STOCK_RECEIVER: StockReceiverInterface
    _ALL_STOCK_PREDICT: dict
    __DEFAULT_STOCK_RECEIVER: str
-   create_stock_receiver(receiver_name: str): StockReceiverInterface
+   create_stock_receiver(\n\t receiver_name: str): StockReceiverInterface
    get_stock_receiver(): StockReceiverInterface
 }
-abstract class node3 as "stock_receiver.stock_receiver_interface.StockReceiverInterface" {
+abstract class StockReceiverInterface as "stock_receiver.StockReceiverInterface" {
    __init__(self)
-   receive_data(self, stock_ticker: str, *args, **kwargs): tuple[dict, pd.DataFrame]
+   receive_data(self, \n\tstock_ticker: str, \n\t*args, \n\t**kwargs): \n\ttuple[dict, pd.DataFrame]
 }
-class node1 as "stock_receiver.yahoo_receiver.YahooReceiver" {
+class YahooReceiver as "stock_receiver.YahooReceiver" {
    parameters: dict
    DEFAULT_PARAMETERS: dict
    __init__(self)
-   receive_data(self, stock_ticker: str, period="max", interval="1d", start=None, end=None): tuple[dict, pd.DataFrame]
+   receive_data(self, \n\t stock_ticker: str, \n\t period="max", \n\t interval="1d", \n\t start=None, \n\t end=None): tuple[dict, pd.DataFrame]
 }
-class node5 as "wallet.demo_wallet.DemoWallet" {
+class DemoWallet as "wallet.DemoWallet" {
    stock_receiver: StockReceiverInterface
    __TICKER_INFO_INDEX: int
    __init__(self, db_user: User)
@@ -95,12 +96,12 @@ class node5 as "wallet.demo_wallet.DemoWallet" {
    sell_stock(self, stock_name: str, amount: float)
    get_all_stocks(self): dict[str, float]
 }
-class node4 as "wallet.wallet_factory.WalletFactory" {
-   DEMO_WALLET: 
-   _ALL_WALLETS: 
-   create_wallet(wallet_name: str, db_user: User): 
+class WalletFactory as "wallet.WalletFactory" {
+   DEMO_WALLET: str
+   _ALL_WALLETS: dict
+   create_wallet(\n\t wallet_name: str, \n\t db_user: User):
 }
-abstract class node6 as "wallet.wallet_interface.WalletInterface" {
+abstract class WalletInterface as "wallet.WalletInterface" {
    db_user: User
    currency: str
    balance: float
@@ -110,11 +111,15 @@ abstract class node6 as "wallet.wallet_interface.WalletInterface" {
    get_all_stocks(self): dict[str, float]
 }
 
-node9 <|.. node10
-node10 <-- node12
-node1 <|.. node3
-node3 <-- node7
-node5 <|.. node6
-node6 <-- node4
-node8 o-- node11
+LstmStockPredict <|.. StockPredictInterface
+StockPredictInterface <-- StockPredictFactory
+YahooReceiver <|.. StockReceiverInterface
+StockReceiverInterface <-- StockReceiverFactory
+DemoWallet <|.. WalletInterface
+WalletInterface <-- WalletFactory
+AuthToken o-- AuthTokenContainer
+AuthTokenContainer <.. User
+WalletInterface o-- User
+DemoWallet o-- Stock
+
 @enduml
