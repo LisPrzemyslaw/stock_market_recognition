@@ -2,7 +2,7 @@
 import os
 import configparser
 
-from flask import Flask, request, url_for, redirect, make_response, render_template
+from flask import Flask, request, url_for, redirect, make_response, render_template, flash
 
 from stock_market_recognition.database.database import User, db_session
 from stock_market_recognition.wallet.wallet_factory import WalletFactory
@@ -15,6 +15,7 @@ _config.read(os.path.join(os.getcwd(), "configuration", "equipment.ini"))
 
 """Flask app"""
 app = Flask(__name__)
+app.secret_key = "supersecretkey"  # For flash messages
 
 """Init components"""
 StockReceiverFactory.create_stock_receiver(_config.get("stock_receiver", "type"))
@@ -121,7 +122,10 @@ def user(username: str):
     if request.method == "POST":
         if request.form.get("Buy") == "Buy":
             amount = float(request.form.get("amount"))
-            wallet.buy_stock(current_stock_ticker, amount)
+            try:
+                wallet.buy_stock(current_stock_ticker, amount)
+            except ValueError as ex:
+                flash(str(ex), "error")
             _update_stock_tickers()
             return render_template(
                 "user.html",
@@ -133,7 +137,10 @@ def user(username: str):
                 recommendation=recommendation)
         if request.form.get("Sell") == "Sell":
             amount = float(request.form.get("amount"))
-            wallet.sell_stock(current_stock_ticker, amount)
+            try:
+                wallet.sell_stock(current_stock_ticker, amount)
+            except ValueError as ex:
+                flash(str(ex), "error")
             _update_stock_tickers()
             return render_template(
                 "user.html",
