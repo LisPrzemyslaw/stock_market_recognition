@@ -2,372 +2,372 @@
     "MSFT": {
         "prediction_days": {
             "2": {
-                "predicted_price": 419.6700134277344,
                 "current_price": 418.95,
-                "mse": 14.14,
-                "mse_scaled": 0.16,
-                "rmse": 3.76
+                "predicted_price": 419.6404113769531,
+                "mse": 14.2793,
+                "mse_scaled": 0.1662,
+                "rmse": 3.7788
             },
             "7": {
-                "predicted_price": 419.6199951171875,
                 "current_price": 418.95,
-                "mse": 14.27,
-                "mse_scaled": 0.17,
-                "rmse": 3.78
+                "predicted_price": 419.6275939941406,
+                "mse": 14.0325,
+                "mse_scaled": 0.1633,
+                "rmse": 3.746
             },
             "10": {
-                "predicted_price": 419.67999267578125,
                 "current_price": 418.95,
-                "mse": 13.74,
-                "mse_scaled": 0.16,
-                "rmse": 3.71
+                "predicted_price": 419.6466064453125,
+                "mse": 14.1361,
+                "mse_scaled": 0.1645,
+                "rmse": 3.7598
             },
             "30": {
-                "predicted_price": 419.6700134277344,
                 "current_price": 418.95,
-                "mse": 14.17,
-                "mse_scaled": 0.16,
-                "rmse": 3.76
+                "predicted_price": 419.6846923828125,
+                "mse": 14.3586,
+                "mse_scaled": 0.1671,
+                "rmse": 3.7893
             }
         },
         "lstm_units": {
             "10": {
-                "predicted_price": 419.6700134277344,
                 "current_price": 418.95,
-                "mse": 14.03,
-                "mse_scaled": 0.16,
-                "rmse": 3.75
+                "predicted_price": 419.6597900390625,
+                "mse": 14.0329,
+                "mse_scaled": 0.1633,
+                "rmse": 3.7461
             },
             "30": {
-                "predicted_price": 419.6600036621094,
                 "current_price": 418.95,
-                "mse": 14.28,
-                "mse_scaled": 0.17,
-                "rmse": 3.78
+                "predicted_price": 419.6744079589844,
+                "mse": 14.0584,
+                "mse_scaled": 0.1636,
+                "rmse": 3.7495
             },
             "50": {
-                "predicted_price": 419.6700134277344,
                 "current_price": 418.95,
-                "mse": 13.88,
-                "mse_scaled": 0.16,
-                "rmse": 3.73
+                "predicted_price": 419.6603088378906,
+                "mse": 14.1748,
+                "mse_scaled": 0.165,
+                "rmse": 3.7649
             }
         },
         "dropout": {
             "0.2": {
-                "predicted_price": 419.6400146484375,
                 "current_price": 418.95,
-                "mse": 14.2,
-                "mse_scaled": 0.17,
-                "rmse": 3.77
+                "predicted_price": 419.652099609375,
+                "mse": 14.1579,
+                "mse_scaled": 0.1648,
+                "rmse": 3.7627
             },
             "0.4": {
-                "predicted_price": 419.67999267578125,
                 "current_price": 418.95,
-                "mse": 13.67,
-                "mse_scaled": 0.16,
-                "rmse": 3.7
+                "predicted_price": 419.651611328125,
+                "mse": 14.282,
+                "mse_scaled": 0.1662,
+                "rmse": 3.7791
             }
         },
         "epoch": {
             "10": {
-                "predicted_price": 419.67999267578125,
                 "current_price": 418.95,
-                "mse": 13.88,
-                "mse_scaled": 0.16,
-                "rmse": 3.73
+                "predicted_price": 419.67138671875,
+                "mse": 14.091,
+                "mse_scaled": 0.164,
+                "rmse": 3.7538
             },
             "15": {
-                "predicted_price": 419.6400146484375,
                 "current_price": 418.95,
-                "mse": 14.29,
-                "mse_scaled": 0.17,
-                "rmse": 3.78
+                "predicted_price": 419.64569091796875,
+                "mse": 14.1586,
+                "mse_scaled": 0.1648,
+                "rmse": 3.7628
             },
             "25": {
-                "predicted_price": 419.6099853515625,
                 "current_price": 418.95,
-                "mse": 14.15,
-                "mse_scaled": 0.16,
-                "rmse": 3.76
+                "predicted_price": 419.65899658203125,
+                "mse": 13.923,
+                "mse_scaled": 0.162,
+                "rmse": 3.7314
             },
             "50": {
-                "predicted_price": 419.6600036621094,
                 "current_price": 418.95,
-                "mse": 14.25,
-                "mse_scaled": 0.17,
-                "rmse": 3.78
+                "predicted_price": 419.66351318359375,
+                "mse": 14.1224,
+                "mse_scaled": 0.1643,
+                "rmse": 3.758
             }
         },
         "batch_size": {
             "16": {
-                "predicted_price": 419.6499938964844,
                 "current_price": 418.95,
-                "mse": 14.24,
-                "mse_scaled": 0.17,
-                "rmse": 3.77
+                "predicted_price": 419.6401062011719,
+                "mse": 14.1969,
+                "mse_scaled": 0.1652,
+                "rmse": 3.7679
             },
             "32": {
-                "predicted_price": 419.6400146484375,
                 "current_price": 418.95,
-                "mse": 14.23,
-                "mse_scaled": 0.17,
-                "rmse": 3.77
+                "predicted_price": 419.6455078125,
+                "mse": 14.2453,
+                "mse_scaled": 0.1658,
+                "rmse": 3.7743
             },
             "64": {
-                "predicted_price": 419.6700134277344,
                 "current_price": 418.95,
-                "mse": 14.15,
-                "mse_scaled": 0.16,
-                "rmse": 3.76
+                "predicted_price": 419.67388916015625,
+                "mse": 13.9953,
+                "mse_scaled": 0.1629,
+                "rmse": 3.741
             }
         }
     },
     "GOOG": {
         "prediction_days": {
             "2": {
-                "predicted_price": 192.0,
                 "current_price": 193.17,
-                "mse": 9.9,
-                "mse_scaled": 0.18,
-                "rmse": 3.15
+                "predicted_price": 192.0117950439453,
+                "mse": 9.8327,
+                "mse_scaled": 0.1739,
+                "rmse": 3.1357
             },
             "7": {
-                "predicted_price": 192.02000427246094,
                 "current_price": 193.17,
-                "mse": 9.69,
-                "mse_scaled": 0.17,
-                "rmse": 3.11
+                "predicted_price": 192.02490234375,
+                "mse": 9.7198,
+                "mse_scaled": 0.1719,
+                "rmse": 3.1177
             },
             "10": {
-                "predicted_price": 192.02999877929688,
                 "current_price": 193.17,
-                "mse": 9.81,
-                "mse_scaled": 0.17,
-                "rmse": 3.13
+                "predicted_price": 192.0157928466797,
+                "mse": 9.8013,
+                "mse_scaled": 0.1733,
+                "rmse": 3.1307
             },
             "30": {
-                "predicted_price": 192.0,
                 "current_price": 193.17,
-                "mse": 9.76,
-                "mse_scaled": 0.17,
-                "rmse": 3.12
+                "predicted_price": 192.0570068359375,
+                "mse": 9.5587,
+                "mse_scaled": 0.169,
+                "rmse": 3.0917
             }
         },
         "lstm_units": {
             "10": {
-                "predicted_price": 192.02000427246094,
                 "current_price": 193.17,
-                "mse": 9.74,
-                "mse_scaled": 0.17,
-                "rmse": 3.12
+                "predicted_price": 192.00840759277344,
+                "mse": 9.8236,
+                "mse_scaled": 0.1737,
+                "rmse": 3.1343
             },
             "30": {
-                "predicted_price": 192.02999877929688,
                 "current_price": 193.17,
-                "mse": 9.77,
-                "mse_scaled": 0.17,
-                "rmse": 3.13
+                "predicted_price": 191.9835968017578,
+                "mse": 9.9637,
+                "mse_scaled": 0.1762,
+                "rmse": 3.1565
             },
             "50": {
-                "predicted_price": 191.99000549316406,
                 "current_price": 193.17,
-                "mse": 9.9,
-                "mse_scaled": 0.18,
-                "rmse": 3.15
+                "predicted_price": 192.0074005126953,
+                "mse": 9.7936,
+                "mse_scaled": 0.1732,
+                "rmse": 3.1295
             }
         },
         "dropout": {
             "0.2": {
-                "predicted_price": 192.02999877929688,
                 "current_price": 193.17,
-                "mse": 9.7,
-                "mse_scaled": 0.17,
-                "rmse": 3.11
+                "predicted_price": 192.0124969482422,
+                "mse": 9.8478,
+                "mse_scaled": 0.1741,
+                "rmse": 3.1381
             },
             "0.4": {
-                "predicted_price": 192.02999877929688,
                 "current_price": 193.17,
-                "mse": 9.67,
-                "mse_scaled": 0.17,
-                "rmse": 3.11
+                "predicted_price": 192.03550720214844,
+                "mse": 9.7398,
+                "mse_scaled": 0.1722,
+                "rmse": 3.1209
             }
         },
         "epoch": {
             "10": {
-                "predicted_price": 192.00999450683594,
                 "current_price": 193.17,
-                "mse": 9.86,
-                "mse_scaled": 0.17,
-                "rmse": 3.14
+                "predicted_price": 191.9658966064453,
+                "mse": 10.0836,
+                "mse_scaled": 0.1783,
+                "rmse": 3.1755
             },
             "15": {
-                "predicted_price": 192.0,
                 "current_price": 193.17,
-                "mse": 9.88,
-                "mse_scaled": 0.17,
-                "rmse": 3.14
+                "predicted_price": 192.00689697265625,
+                "mse": 9.846,
+                "mse_scaled": 0.1741,
+                "rmse": 3.1378
             },
             "25": {
-                "predicted_price": 191.99000549316406,
                 "current_price": 193.17,
-                "mse": 9.91,
-                "mse_scaled": 0.18,
-                "rmse": 3.15
+                "predicted_price": 192.0321044921875,
+                "mse": 9.7241,
+                "mse_scaled": 0.172,
+                "rmse": 3.1183
             },
             "50": {
-                "predicted_price": 192.02000427246094,
                 "current_price": 193.17,
-                "mse": 9.78,
-                "mse_scaled": 0.17,
-                "rmse": 3.13
+                "predicted_price": 192.02569580078125,
+                "mse": 9.7075,
+                "mse_scaled": 0.1717,
+                "rmse": 3.1157
             }
         },
         "batch_size": {
             "16": {
-                "predicted_price": 192.00999450683594,
                 "current_price": 193.17,
-                "mse": 9.83,
-                "mse_scaled": 0.17,
-                "rmse": 3.13
+                "predicted_price": 192.01109313964844,
+                "mse": 9.7448,
+                "mse_scaled": 0.1723,
+                "rmse": 3.1217
             },
             "32": {
-                "predicted_price": 192.00999450683594,
                 "current_price": 193.17,
-                "mse": 9.83,
-                "mse_scaled": 0.17,
-                "rmse": 3.14
+                "predicted_price": 192.0319061279297,
+                "mse": 9.739,
+                "mse_scaled": 0.1722,
+                "rmse": 3.1207
             },
             "64": {
-                "predicted_price": 192.00999450683594,
                 "current_price": 193.17,
-                "mse": 9.82,
-                "mse_scaled": 0.17,
-                "rmse": 3.13
+                "predicted_price": 192.01730346679688,
+                "mse": 9.7799,
+                "mse_scaled": 0.1729,
+                "rmse": 3.1273
             }
         }
     },
     "DELL": {
         "prediction_days": {
             "2": {
-                "predicted_price": 115.8499984741211,
                 "current_price": 114.77,
-                "mse": 17.31,
-                "mse_scaled": 0.18,
-                "rmse": 4.16
+                "predicted_price": 115.82620239257812,
+                "mse": 17.4473,
+                "mse_scaled": 0.1784,
+                "rmse": 4.177
             },
             "7": {
-                "predicted_price": 115.83000183105469,
                 "current_price": 114.77,
-                "mse": 17.33,
-                "mse_scaled": 0.18,
-                "rmse": 4.16
+                "predicted_price": 115.81539916992188,
+                "mse": 17.8186,
+                "mse_scaled": 0.1822,
+                "rmse": 4.2212
             },
             "10": {
-                "predicted_price": 115.80999755859375,
                 "current_price": 114.77,
-                "mse": 17.6,
-                "mse_scaled": 0.18,
-                "rmse": 4.19
+                "predicted_price": 115.83940124511719,
+                "mse": 17.1624,
+                "mse_scaled": 0.1755,
+                "rmse": 4.1428
             },
             "30": {
-                "predicted_price": 115.83000183105469,
                 "current_price": 114.77,
-                "mse": 17.39,
-                "mse_scaled": 0.18,
-                "rmse": 4.17
+                "predicted_price": 115.87059783935547,
+                "mse": 17.0904,
+                "mse_scaled": 0.1747,
+                "rmse": 4.134
             }
         },
         "lstm_units": {
             "10": {
-                "predicted_price": 115.79000091552734,
                 "current_price": 114.77,
-                "mse": 17.55,
-                "mse_scaled": 0.18,
-                "rmse": 4.19
+                "predicted_price": 115.85220336914062,
+                "mse": 17.4711,
+                "mse_scaled": 0.1786,
+                "rmse": 4.1798
             },
             "30": {
-                "predicted_price": 115.8499984741211,
                 "current_price": 114.77,
-                "mse": 17.48,
-                "mse_scaled": 0.18,
-                "rmse": 4.18
+                "predicted_price": 115.79609680175781,
+                "mse": 17.7471,
+                "mse_scaled": 0.1814,
+                "rmse": 4.2127
             },
             "50": {
-                "predicted_price": 115.79000091552734,
                 "current_price": 114.77,
-                "mse": 17.73,
-                "mse_scaled": 0.18,
-                "rmse": 4.21
+                "predicted_price": 115.85209655761719,
+                "mse": 17.4754,
+                "mse_scaled": 0.1787,
+                "rmse": 4.1804
             }
         },
         "dropout": {
             "0.2": {
-                "predicted_price": 115.83999633789062,
                 "current_price": 114.77,
-                "mse": 17.05,
-                "mse_scaled": 0.17,
-                "rmse": 4.13
+                "predicted_price": 115.81900024414062,
+                "mse": 17.5,
+                "mse_scaled": 0.1789,
+                "rmse": 4.1833
             },
             "0.4": {
-                "predicted_price": 115.80000305175781,
                 "current_price": 114.77,
-                "mse": 17.6,
-                "mse_scaled": 0.18,
-                "rmse": 4.2
+                "predicted_price": 115.83499908447266,
+                "mse": 17.3751,
+                "mse_scaled": 0.1776,
+                "rmse": 4.1683
             }
         },
         "epoch": {
             "10": {
-                "predicted_price": 115.80999755859375,
                 "current_price": 114.77,
-                "mse": 17.44,
-                "mse_scaled": 0.18,
-                "rmse": 4.18
+                "predicted_price": 115.8572998046875,
+                "mse": 17.2711,
+                "mse_scaled": 0.1766,
+                "rmse": 4.1559
             },
             "15": {
-                "predicted_price": 115.8499984741211,
                 "current_price": 114.77,
-                "mse": 17.29,
-                "mse_scaled": 0.18,
-                "rmse": 4.16
+                "predicted_price": 115.83419799804688,
+                "mse": 17.1529,
+                "mse_scaled": 0.1754,
+                "rmse": 4.1416
             },
             "25": {
-                "predicted_price": 115.79000091552734,
                 "current_price": 114.77,
-                "mse": 17.47,
-                "mse_scaled": 0.18,
-                "rmse": 4.18
+                "predicted_price": 115.89820098876953,
+                "mse": 16.9973,
+                "mse_scaled": 0.1738,
+                "rmse": 4.1228
             },
             "50": {
-                "predicted_price": 115.81999969482422,
                 "current_price": 114.77,
-                "mse": 17.39,
-                "mse_scaled": 0.18,
-                "rmse": 4.17
+                "predicted_price": 115.78299713134766,
+                "mse": 17.6909,
+                "mse_scaled": 0.1809,
+                "rmse": 4.2061
             }
         },
         "batch_size": {
             "16": {
-                "predicted_price": 115.80999755859375,
                 "current_price": 114.77,
-                "mse": 17.68,
-                "mse_scaled": 0.18,
-                "rmse": 4.21
+                "predicted_price": 115.82839965820312,
+                "mse": 17.3406,
+                "mse_scaled": 0.1773,
+                "rmse": 4.1642
             },
             "32": {
-                "predicted_price": 115.83000183105469,
                 "current_price": 114.77,
-                "mse": 17.49,
-                "mse_scaled": 0.18,
-                "rmse": 4.18
+                "predicted_price": 115.8062973022461,
+                "mse": 17.747,
+                "mse_scaled": 0.1814,
+                "rmse": 4.2127
             },
             "64": {
-                "predicted_price": 115.80999755859375,
                 "current_price": 114.77,
-                "mse": 17.29,
-                "mse_scaled": 0.18,
-                "rmse": 4.16
+                "predicted_price": 115.82460021972656,
+                "mse": 17.5929,
+                "mse_scaled": 0.1799,
+                "rmse": 4.1944
             }
         }
     }

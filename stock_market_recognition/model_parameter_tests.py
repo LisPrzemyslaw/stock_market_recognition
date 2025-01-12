@@ -59,14 +59,14 @@ def main():
                     current_price = ticker_data[ticker][_TICKER_INFO_INDEX]["currentPrice"]
                 except KeyError:
                     current_price = ticker_data[ticker][_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-1:]
-                predicted_price = round(stock_predictor.predict(last_days_close_value, True), 2)
-                mse = round(stock_predictor.mse, 2)
-                mse_scaled = round(stock_predictor.mse_scaled, 2)
-                rmse = round(stock_predictor.mse ** 0.5, 2)
+                predicted_price = round(stock_predictor.predict(last_days_close_value, True), 4)
+                mse = round(stock_predictor.mse, 4)
+                mse_scaled = round(stock_predictor.mse_scaled, 4)
+                rmse = round(stock_predictor.mse ** 0.5, 4)
 
                 results[ticker][parameter_name][parameter_value] = {}
-                results[ticker][parameter_name][parameter_value]["predicted_price"] = float(predicted_price)
                 results[ticker][parameter_name][parameter_value]["current_price"] = float(current_price)
+                results[ticker][parameter_name][parameter_value]["predicted_price"] = float(predicted_price)
                 results[ticker][parameter_name][parameter_value]["mse"] = float(mse)
                 results[ticker][parameter_name][parameter_value]["mse_scaled"] = float(mse_scaled)
                 results[ticker][parameter_name][parameter_value]["rmse"] = float(rmse)
