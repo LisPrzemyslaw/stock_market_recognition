@@ -5,4 +5,4 @@ to predict and invest money.
 
 ### How to use?
 First, instal environment via poetry and then run the app by command:
->>> py app.py
+    >>> py app.py
