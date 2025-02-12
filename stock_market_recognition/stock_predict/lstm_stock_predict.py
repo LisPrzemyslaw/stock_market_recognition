@@ -84,9 +84,6 @@ class LstmStockPredict(StockPredictInterface):
 
     def __prepare_train_data(self) -> None:
         """This function will prepare the data to be trained"""
-        # country = self.thicker_info.get("country", None)
-        # if country is None:
-        #     raise ValueError("Country is not defined")
         x_train = []
         y_train = []
         for x in range(self.prediction_days, len(self.scaled_data)):
@@ -114,7 +111,7 @@ class LstmStockPredict(StockPredictInterface):
         self.__scale_data()
         self.__prepare_train_data()
         self.__create_model()
-
+        print(self.x_train.shape, self.y_train.shape)
         self.model.fit(self.x_train, self.y_train, epochs=self.epoch, batch_size=self.batch_size)
         self.model.save(self.model_path)
         self.model.summary()

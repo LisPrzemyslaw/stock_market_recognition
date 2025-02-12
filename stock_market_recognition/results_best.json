@@ -1,0 +1,16 @@
+{
+    "MSFT": {
+        "mse": 314.2956,
+        "current_price": 414.73,
+        "predicted_price": 419.6536865234375,
+        "mse_scaled": 0.1986,
+        "rmse": 17.7284
+    },
+    "GOOG": {
+        "mse": 211.1403,
+        "current_price": 190.57,
+        "predicted_price": 177.16079711914062,
+        "mse_scaled": 0.272,
+        "rmse": 14.5307
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "MSFT": {
+        "current_price": 418.95,
+        "predicted_price": 423.1241149902344,
+        "mse": 228.623,
+        "mse_scaled": 0.1776,
+        "rmse": 15.1203
+    },
+    "GOOG": {
+        "current_price": 193.17,
+        "predicted_price": 176.97659301757812,
+        "mse": 211.5247,
+        "mse_scaled": 0.2725,
+        "rmse": 14.5439
+    },
+    "DELL": {
+        "current_price": 114.77,
+        "predicted_price": 117.7031021118164,
+        "mse": 39.4842,
+        "mse_scaled": 0.0445,
+        "rmse": 6.2836
+    }
+}

@@ -77,15 +77,6 @@ def index():
 
             response = make_response(redirect(url_for("user", username=username)))
             response.set_cookie(AUTH_KEY, AuthTokenContainer.add_token(db_user.user_id), httponly=True, secure=True, samesite='Lax')
-            """
-            TODO move it into documentation
-            HttpOnly - Zapobiega dostępowi do wartości cookie przez JavaScript po stronie klienta, co minimalizuje
-            ryzyko ataków XSS (Cross-Site Scripting).
-            Secure - Wymusza przesyłanie cookie tylko przez bezpieczne połączenie (HTTPS), co chroni przed
-            przechwyceniem tokenu przez ataki typu man-in-the-middle.
-            SameSite - Ogranicza wysyłanie cookie do żądań pochodzących z tego samego źródła, co może pomóc w ochronie
-            przed atakami CSRF (Cross-Site Request Forgery).
-            """
             return response
 
         if request.form.get("Register") == "Register":
@@ -127,14 +118,7 @@ def user(username: str):
             except ValueError as ex:
                 flash(str(ex), "error")
             _update_stock_tickers()
-            return render_template(
-                "user.html",
-                username=username,
-                balance=wallet.balance,
-                stock_tickers=STOCK_TICKERS,
-                current_price=current_price,
-                predicted_price=predicted_price,
-                recommendation=recommendation)
+            return render_template("user.html", username=username, balance=wallet.balance, stock_tickers=STOCK_TICKERS, current_price=current_price, predicted_price=predicted_price, recommendation=recommendation)
         if request.form.get("Sell") == "Sell":
             amount = float(request.form.get("amount"))
             try:
@@ -142,14 +126,7 @@ def user(username: str):
             except ValueError as ex:
                 flash(str(ex), "error")
             _update_stock_tickers()
-            return render_template(
-                "user.html",
-                username=username,
-                balance=wallet.balance,
-                stock_tickers=STOCK_TICKERS,
-                current_price=current_price,
-                predicted_price=predicted_price,
-                recommendation=recommendation)
+            return render_template("user.html", username=username, balance=wallet.balance, stock_tickers=STOCK_TICKERS, current_price=current_price, predicted_price=predicted_price, recommendation=recommendation)
         if request.form.get("submit_stock_ticker") == "Select":
             current_stock_ticker = request.form["stocks"]
             _update_stock_tickers()
@@ -158,42 +135,20 @@ def user(username: str):
             try:
                 current_price = data[_TICKER_INFO_INDEX]["currentPrice"]
             except KeyError:
-                current_price = data[_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-1:]  # TODO
+                current_price = data[_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-1:]
 
             STOCK_PREDICTORS[current_stock_ticker] = StockPredictFactory.create_stock_predict(_config.get("stock_predict", "type"), data, PREDICTION_DAYS)
             last_days_close_value = data[_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-PREDICTION_DAYS:]
             predicted_price = round(STOCK_PREDICTORS[current_stock_ticker].predict(last_days_close_value), 2)
-            # TODO update the recommendation
-            return render_template(
-                "user.html",
-                username=username,
-                balance=wallet.balance,
-                stock_tickers=STOCK_TICKERS,
-                current_price=current_price,
-                predicted_price=predicted_price,
-                recommendation=recommendation)
+            return render_template("user.html", username=username, balance=wallet.balance, stock_tickers=STOCK_TICKERS, current_price=current_price, predicted_price=predicted_price, recommendation=recommendation)
         if request.form.get("dev_mode") == "dev_mode":
             response = make_response(redirect(url_for("fit_model")))
             response.set_cookie(AUTH_KEY, AuthTokenContainer.add_token(db_user.user_id), httponly=True, secure=True, samesite='Lax')
             return response
 
     if request.method == "GET":
-        return render_template(
-            "user.html",
-            username=username,
-            balance=wallet.balance,
-            stock_tickers=STOCK_TICKERS,
-            current_price=current_price,
-            predicted_price=predicted_price,
-            recommendation=recommendation)
-    return render_template(
-        "user.html",
-        username=username,
-        balance=wallet.balance,
-        stock_tickers=STOCK_TICKERS,
-        current_price=current_price,
-        predicted_price=predicted_price,
-        recommendation=recommendation)
+        return render_template("user.html", username=username, balance=wallet.balance, stock_tickers=STOCK_TICKERS, current_price=current_price, predicted_price=predicted_price, recommendation=recommendation)
+    return render_template("user.html", username=username, balance=wallet.balance, stock_tickers=STOCK_TICKERS, current_price=current_price, predicted_price=predicted_price, recommendation=recommendation)
 
 
 @app.route("/fit_model", methods=["POST", "GET"])
@@ -224,14 +179,7 @@ def fit_model():
             mse_scaled = round(stock_predictor.mse_scaled, 2)
             rmse = round(stock_predictor.mse ** 0.5, 2)
 
-    return render_template(
-        "fit_model.html",
-        stock_tickers=STOCK_TICKERS,
-        current_price=current_price,
-        predicted_price=predicted_price,
-        mse=mse,
-        mse_scaled=mse_scaled,
-        rmse=rmse)
+    return render_template("fit_model.html", stock_tickers=STOCK_TICKERS, current_price=current_price, predicted_price=predicted_price, mse=mse, mse_scaled=mse_scaled, rmse=rmse)
 
 
 if __name__ == "__main__":

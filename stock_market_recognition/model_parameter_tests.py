@@ -12,7 +12,11 @@ DROPOUT = [0.2, 0.4]
 EPOCH = [10, 15, 25, 50]
 BATCH_SIZE = [16, 32, 64]
 
-STOCK_TICKERS = ["MSFT", "GOOG", "DELL", ]
+STOCK_TICKERS = [
+    "MSFT",
+    "GOOG",
+    # "DELL",
+]
 
 PARAMETERS_DICT = {
     "prediction_days": PREDICTION_DAYS,
@@ -30,47 +34,84 @@ default_batch_size: int = 32
 
 
 def main():
+    # stock_receiver = YahooReceiver()
+    # ticker_data = {}
+    # results = {}
+    # for ticker in STOCK_TICKERS:
+    #     ticker_data[ticker] = stock_receiver.receive_data(ticker, period="MAX")
+    #     results[ticker] = {}
+    #     for parameter_name, parameter_values in PARAMETERS_DICT.items():
+    #         results[ticker][parameter_name] = {}
+    #         for parameter_value in parameter_values:
+    #             print("=====================================")
+    #             print(f"TICKER: {ticker}, PARAMETER: {parameter_name}, VALUE: {parameter_value}")
+    #             print("=====================================")
+    #
+    #             # Set default values
+    #             prediction_days = default_prediction_day
+    #             lstm_units = default_lstm_units
+    #             dropout = default_dropout
+    #             epoch = default_epoch
+    #             batch_size = default_batch_size
+    #             # set parameter value
+    #             globals()[parameter_name] = parameter_value
+    #
+    #             stock_predictor = LstmStockPredict(ticker_data[ticker], prediction_days, lstm_units, dropout, epoch, batch_size)
+    #             last_days_close_value = ticker_data[ticker][_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-prediction_days:]
+    #
+    #             try:
+    #                 current_price = ticker_data[ticker][_TICKER_INFO_INDEX]["currentPrice"]
+    #             except KeyError:
+    #                 current_price = ticker_data[ticker][_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-1:]
+    #             predicted_price = round(stock_predictor.predict(last_days_close_value, True), 4)
+    #             mse = round(stock_predictor.mse, 4)
+    #             mse_scaled = round(stock_predictor.mse_scaled, 4)
+    #             rmse = round(stock_predictor.mse ** 0.5, 4)
+    #
+    #             results[ticker][parameter_name][parameter_value] = {}
+    #             results[ticker][parameter_name][parameter_value]["current_price"] = float(current_price)
+    #             results[ticker][parameter_name][parameter_value]["predicted_price"] = float(predicted_price)
+    #             results[ticker][parameter_name][parameter_value]["mse"] = float(mse)
+    #             results[ticker][parameter_name][parameter_value]["mse_scaled"] = float(mse_scaled)
+    #             results[ticker][parameter_name][parameter_value]["rmse"] = float(rmse)
+    # with open(os.path.join(os.getcwd(), "results.json"), "w") as file:
+    #     json.dump(results, file, indent=4)
     stock_receiver = YahooReceiver()
     ticker_data = {}
     results = {}
     for ticker in STOCK_TICKERS:
         ticker_data[ticker] = stock_receiver.receive_data(ticker, period="MAX")
-        results[ticker] = {}
-        for parameter_name, parameter_values in PARAMETERS_DICT.items():
-            results[ticker][parameter_name] = {}
-            for parameter_value in parameter_values:
-                print("=====================================")
-                print(f"TICKER: {ticker}, PARAMETER: {parameter_name}, VALUE: {parameter_value}")
-                print("=====================================")
+        results[ticker] = {"mse": 1000.0}  # Big value to update with first value
 
-                # Set default values
-                prediction_days = default_prediction_day
-                lstm_units = default_lstm_units
-                dropout = default_dropout
-                epoch = default_epoch
-                batch_size = default_batch_size
-                # set parameter value
-                globals()[parameter_name] = parameter_value
+        # Set default values
+        prediction_days = 30
+        lstm_units = 10
+        dropout = 0.4
+        epoch = 25
+        batch_size = 16
 
-                stock_predictor = LstmStockPredict(ticker_data[ticker], prediction_days, lstm_units, dropout, epoch, batch_size)
-                last_days_close_value = ticker_data[ticker][_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-prediction_days:]
+        for i in range(15):
+            print(f"Ticker: {ticker}, iteration: {i} ")
+            stock_predictor = LstmStockPredict(ticker_data[ticker], prediction_days, lstm_units, dropout, epoch, batch_size)
+            last_days_close_value = ticker_data[ticker][_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-prediction_days:]
 
-                try:
-                    current_price = ticker_data[ticker][_TICKER_INFO_INDEX]["currentPrice"]
-                except KeyError:
-                    current_price = ticker_data[ticker][_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-1:]
-                predicted_price = round(stock_predictor.predict(last_days_close_value, True), 4)
-                mse = round(stock_predictor.mse, 4)
-                mse_scaled = round(stock_predictor.mse_scaled, 4)
-                rmse = round(stock_predictor.mse ** 0.5, 4)
+            try:
+                current_price = ticker_data[ticker][_TICKER_INFO_INDEX]["currentPrice"]
+            except KeyError:
+                current_price = ticker_data[ticker][_TICKER_HISTORICAL_DATA_INDEX]["Close"].values[-1:]
+            predicted_price = round(stock_predictor.predict(last_days_close_value, True), 4)
+            mse = round(stock_predictor.mse, 4)
+            mse_scaled = round(stock_predictor.mse_scaled, 4)
+            rmse = round(stock_predictor.mse ** 0.5, 4)
 
-                results[ticker][parameter_name][parameter_value] = {}
-                results[ticker][parameter_name][parameter_value]["current_price"] = float(current_price)
-                results[ticker][parameter_name][parameter_value]["predicted_price"] = float(predicted_price)
-                results[ticker][parameter_name][parameter_value]["mse"] = float(mse)
-                results[ticker][parameter_name][parameter_value]["mse_scaled"] = float(mse_scaled)
-                results[ticker][parameter_name][parameter_value]["rmse"] = float(rmse)
-    with open(os.path.join(os.getcwd(), "results.json"), "w") as file:
+            if mse < results[ticker]["mse"]:
+                results[ticker]["current_price"] = float(current_price)
+                results[ticker]["predicted_price"] = float(predicted_price)
+                results[ticker]["mse"] = float(mse)
+                results[ticker]["mse_scaled"] = float(mse_scaled)
+                results[ticker]["rmse"] = float(rmse)
+
+    with open(os.path.join(os.getcwd(), "results_best.json"), "w") as file:
         json.dump(results, file, indent=4)
 
 
